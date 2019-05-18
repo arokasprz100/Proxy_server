@@ -15,10 +15,10 @@ std::string PSiCAlgorithm(std::string input)
 	cpp_int increased = multiplied + 252100;
 
 	// step 4
-	cpp_int first_2_digits = increased / cpp_int("10000000000000000000000000000");
+	cpp_int first_2_digits = cpp_int(input.substr(0, 2));
 
 	// step 5
-	cpp_int result = last_24_digits + first_2_digits;
+	cpp_int result = increased + first_2_digits;
 
 	// step 6
 	cpp_int modulo = result % 97;
