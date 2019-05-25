@@ -1,9 +1,11 @@
-#include "Server.hpp"
+#include "ServerOwner.hpp"
+#include "LogSystem/LogSystem.hpp"
 #include <memory>
 
 int main()
 {
-	std::unique_ptr<Server> server(new Server(8080));
-	server->startHandlingClients();
+	signal(SIGINT, sigintHandler); 
+	LogSystem::initialize(LogType::CONSOLE);
+	ServerOwner::startServer(8080);
 	return 0;
 }

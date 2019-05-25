@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.7.2)
+project(ProxyServer)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -pedantic-errors")
+set(CMAKE_SHARED_LINKER_FLAGS "-lssl -lcrypto")
+
+
+file(GLOB Server_src
+    "*.hpp"
+    "*.cpp"
+    "DataReaders/*.hpp"
+    "DataReaders/*.cpp"
+    "DataWriters/*.hpp"
+    "DataWriters/*.cpp"
+    "LogSystem/*.hpp"
+    "LogSystem/*.cpp")
+
+add_executable(Server
+	${Server_src}
+)
+
+find_package(OpenSSL REQUIRED)
+target_link_libraries(Server OpenSSL::SSL)

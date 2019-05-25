@@ -10,7 +10,7 @@ class SSLInitializer final
 {
 public:
 
-	static SSL_CTX* initializeOpenSSL() {
+	static SSL_CTX* initialize() {
 		initOpenssl();
 		SSL_CTX* ctx = prepareContext();
 		configureContextKeyAndCert(ctx);
@@ -33,6 +33,7 @@ private:
 			ERR_print_errors_fp(stderr);
 			exit(EXIT_FAILURE);
 		}
+		SSL_CTX_set_mode(ctx, SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER);
 		return ctx;
 	}
 

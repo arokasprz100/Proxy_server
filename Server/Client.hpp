@@ -5,6 +5,20 @@
 #include <string>
 #include <vector>
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+#include <fcntl.h>
+#include <poll.h>
+
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+#include "ConnectionType.hpp"
+
 class Client
 {
 public:
@@ -17,33 +31,36 @@ public:
 
 	void clearDataFromClient() {
 		m_dataFromClient.clear();
-		m_httpRequest.clear();
+		m_httpRequestFromClient.clear();
 	}
 
-	void addDataFromClient(const std::string& dataToAdd) {
-		m_dataFromClient += dataToAdd;
+	void addDataFromClient(const std::vector<char>& dataToAdd) {
+		m_dataFromClient.insert(m_dataFromClient.end(), dataToAdd.begin(), dataToAdd.end());
 	}
 
-	void createHttpRequest() {
-		m_httpRequest = m_dataFromClient;
-	}
-
-	const std::string getDataFromClient() const {
+	const std::vector<char> getDataFromClient() const {
 		return m_dataFromClient;
 	}
 
-	const std::string getHttpRequest() const {
-		return m_httpRequest;
-	}
-
-
 	SSL* ssl;
 
-private:
-	std::string m_dataFromClient;
+	int clientSocket;
+	int serverSocket;
 
-	sockaddr_in m_clientAddr; 
-	std::string m_httpRequest;
+	sockaddr_in m_serverAddr;
+	sockaddr_in m_clientAddr;
+
+	ConnectionType connectionType = ConnectionType::UNDEFINED;
+
+	pollfd* clientConnectionPollFD = nullptr;
+	pollfd* serverConnectionPollFD = nullptr;
+
+	std::vector<char> m_dataFromClient; 
+
+	std::vector<char> m_httpRequestFromClient;
+	std::vector<char> m_httpResponseFromServer;
+
+	int id;
 };
 
 #endif // Client_hpp
