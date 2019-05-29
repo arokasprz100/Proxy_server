@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Stuff Dominik is adding that absolutely should not be in the repository
+Makefile
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
