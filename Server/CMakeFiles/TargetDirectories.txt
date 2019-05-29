@@ -1,0 +1,3 @@
+/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/edit_cache.dir
+/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir
