@@ -43,10 +43,10 @@ RM = /home/dominik/.local/lib/python2.7/site-packages/cmake/data/bin/cmake -E re
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server
+CMAKE_SOURCE_DIR = /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server
+CMAKE_BINARY_DIR = /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Server.dir/depend.make
@@ -59,55 +59,55 @@ include CMakeFiles/Server.dir/flags.make
 
 CMakeFiles/Server.dir/HostConnector.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/HostConnector.cpp.o: HostConnector.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/HostConnector.cpp.o"
-	/usr/local/gcc-8.2/bin/g++-8.2  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/HostConnector.cpp.o -c /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/HostConnector.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/HostConnector.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/HostConnector.cpp.o -c /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/HostConnector.cpp
 
 CMakeFiles/Server.dir/HostConnector.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/HostConnector.cpp.i"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/HostConnector.cpp > CMakeFiles/Server.dir/HostConnector.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/HostConnector.cpp > CMakeFiles/Server.dir/HostConnector.cpp.i
 
 CMakeFiles/Server.dir/HostConnector.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/HostConnector.cpp.s"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/HostConnector.cpp -o CMakeFiles/Server.dir/HostConnector.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/HostConnector.cpp -o CMakeFiles/Server.dir/HostConnector.cpp.s
 
 CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o: LogSystem/LogSystem.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o"
-	/usr/local/gcc-8.2/bin/g++-8.2  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o -c /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/LogSystem/LogSystem.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o -c /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/LogSystem/LogSystem.cpp
 
 CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.i"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/LogSystem/LogSystem.cpp > CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/LogSystem/LogSystem.cpp > CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.i
 
 CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.s"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/LogSystem/LogSystem.cpp -o CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/LogSystem/LogSystem.cpp -o CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.s
 
 CMakeFiles/Server.dir/ServerMain.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/ServerMain.cpp.o: ServerMain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Server.dir/ServerMain.cpp.o"
-	/usr/local/gcc-8.2/bin/g++-8.2  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/ServerMain.cpp.o -c /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerMain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Server.dir/ServerMain.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/ServerMain.cpp.o -c /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerMain.cpp
 
 CMakeFiles/Server.dir/ServerMain.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/ServerMain.cpp.i"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerMain.cpp > CMakeFiles/Server.dir/ServerMain.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerMain.cpp > CMakeFiles/Server.dir/ServerMain.cpp.i
 
 CMakeFiles/Server.dir/ServerMain.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/ServerMain.cpp.s"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerMain.cpp -o CMakeFiles/Server.dir/ServerMain.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerMain.cpp -o CMakeFiles/Server.dir/ServerMain.cpp.s
 
 CMakeFiles/Server.dir/ServerOwner.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/ServerOwner.cpp.o: ServerOwner.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Server.dir/ServerOwner.cpp.o"
-	/usr/local/gcc-8.2/bin/g++-8.2  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/ServerOwner.cpp.o -c /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerOwner.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Server.dir/ServerOwner.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/ServerOwner.cpp.o -c /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerOwner.cpp
 
 CMakeFiles/Server.dir/ServerOwner.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/ServerOwner.cpp.i"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerOwner.cpp > CMakeFiles/Server.dir/ServerOwner.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerOwner.cpp > CMakeFiles/Server.dir/ServerOwner.cpp.i
 
 CMakeFiles/Server.dir/ServerOwner.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/ServerOwner.cpp.s"
-	/usr/local/gcc-8.2/bin/g++-8.2 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerOwner.cpp -o CMakeFiles/Server.dir/ServerOwner.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerOwner.cpp -o CMakeFiles/Server.dir/ServerOwner.cpp.s
 
 # Object files for target Server
 Server_OBJECTS = \
@@ -128,7 +128,7 @@ Server: /usr/lib/x86_64-linux-gnu/libssl.so
 Server: /usr/lib/x86_64-linux-gnu/libboost_program_options.so
 Server: /usr/lib/x86_64-linux-gnu/libcrypto.so
 Server: CMakeFiles/Server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable Server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable Server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -141,6 +141,6 @@ CMakeFiles/Server.dir/clean:
 .PHONY : CMakeFiles/Server.dir/clean
 
 CMakeFiles/Server.dir/depend:
-	cd /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server /mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir/DependInfo.cmake --color=$(COLOR)
+	cd /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server /mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles/Server.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Server.dir/depend
 

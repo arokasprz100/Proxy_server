@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/HostConnector.cpp" "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir/HostConnector.cpp.o"
-  "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/LogSystem/LogSystem.cpp" "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o"
-  "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerMain.cpp" "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir/ServerMain.cpp.o"
-  "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/ServerOwner.cpp" "/mnt/c/Users/MSI/Desktop/proxy/Proxy_server/Server/CMakeFiles/Server.dir/ServerOwner.cpp.o"
+  "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/HostConnector.cpp" "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles/Server.dir/HostConnector.cpp.o"
+  "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/LogSystem/LogSystem.cpp" "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles/Server.dir/LogSystem/LogSystem.cpp.o"
+  "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerMain.cpp" "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles/Server.dir/ServerMain.cpp.o"
+  "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/ServerOwner.cpp" "/mnt/c/Users/MSI/Desktop/aadasd/Proxy_server/Server/CMakeFiles/Server.dir/ServerOwner.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
