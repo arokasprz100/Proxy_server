@@ -14,11 +14,14 @@ file(GLOB Server_src
     "DataWriters/*.hpp"
     "DataWriters/*.cpp"
     "LogSystem/*.hpp"
-    "LogSystem/*.cpp")
+    "LogSystem/*.cpp"
+    "ArgumentParser/*.hpp")
 
 add_executable(Server
 	${Server_src}
 )
 
 find_package(OpenSSL REQUIRED)
-target_link_libraries(Server OpenSSL::SSL)
+FIND_PACKAGE(Boost COMPONENTS program_options REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+target_link_libraries(Server OpenSSL::SSL ${Boost_LIBRARIES})

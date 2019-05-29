@@ -8,6 +8,8 @@ class DataToServerWriter
 public:
 
 	static int writeDataToServer(Client& client) {
+		client.timestamp = std::chrono::high_resolution_clock::now();
+
 		int operationStatus = send(client.serverSocket, 
 				client.m_httpRequestFromClient.data(), 
 				client.m_httpRequestFromClient.size(), MSG_NOSIGNAL);
@@ -16,6 +18,7 @@ public:
 		if (operationStatus > 0) {
 			client.m_httpRequestFromClient.erase(client.m_httpRequestFromClient.begin(), 
 				client.m_httpRequestFromClient.begin() + operationStatus);
+			client.timestamp = std::chrono::high_resolution_clock::now();
 		}
 		
 		client.serverConnectionPollFD->events = POLLIN | POLLOUT;

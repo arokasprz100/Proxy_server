@@ -24,6 +24,10 @@ public:
 			if (dataAlreadyWritenSize == dataToSendSize) {
 				client.m_httpResponseFromServer.clear();
 				client.clientConnectionPollFD->events = POLLIN; // udalo sie zapisac dane, chcemy czytac dane od klienta
+
+				if(operationStatus > 0)
+					client.timestamp = std::chrono::high_resolution_clock::now();
+
 				return operationStatus;
 			}
 		}

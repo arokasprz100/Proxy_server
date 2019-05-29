@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <chrono>
 
 #include "SSLInitializer.hpp"
 #include "ServerInitializer.hpp"
@@ -64,8 +65,9 @@ public:
 				acceptNewConnection();
 			}
 
-			for (auto& client : m_clients) 
+			for (long unsigned int clientIndex = 0; clientIndex < m_clients.size(); clientIndex++) 
 			{
+				auto& client = m_clients[clientIndex];
 				int operationStatus = 0;
 
 				// odbieranie niezaszyfrowanych danych - poczatek polaczenia
@@ -199,6 +201,17 @@ public:
 				
 				}
 
+				// zamykanie nieużywanego połączenia
+				// TODO: użyć wartości z ustawień -> teraz timeout po 10s bezczynności
+				auto clientUptime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - client.timestamp);
+				if(clientUptime.count() > 10.0)
+				{
+					// zamykanie połączeń
+					LogSystem::logMessage("Client uptime: " + std::to_string(clientUptime.count()) + "s", "CLOSING", std::to_string(client.id));
+					closeEncryptedClient(client, clientIndex);
+					break;
+				}
+
 			}
 		}
 	}
@@ -260,11 +273,50 @@ public:
 		newClient.clientConnectionPollFD = &(m_pollfds.back());
 		newClient.serverConnectionPollFD = nullptr;
 		newClient.id = nextId;
+		newClient.timestamp = std::chrono::high_resolution_clock::now();
 		nextId++;
 
 		m_clients.push_back(newClient);
 
 		std::cout << " + New connection accepted + " << std::endl;
+	}
+
+	void closeEncryptedClient(Client& client, int clientIndex)
+	{
+		if(client.clientConnectionPollFD != nullptr)
+		{
+			int clientFd = client.clientConnectionPollFD->fd;
+
+			for(long unsigned int pollFdIndex = 0; pollFdIndex < m_pollfds.size(); pollFdIndex++)
+			{
+				auto& pollFd = m_pollfds[pollFdIndex];
+				if(pollFd.fd == clientFd)
+				{
+					close(pollFd.fd);
+					SSL_free(client.ssl);
+					m_pollfds.erase(m_pollfds.begin() + pollFdIndex);
+					break;
+				}
+			}
+		}
+
+		if(client.serverConnectionPollFD != nullptr)
+		{
+			int serverFd = client.serverConnectionPollFD->fd;
+
+			for(long unsigned int pollFdIndex = 0; pollFdIndex < m_pollfds.size(); pollFdIndex++)
+			{
+				auto& pollFd = m_pollfds[pollFdIndex];
+				if(pollFd.fd == serverFd)
+				{
+					close(pollFd.fd);
+					m_pollfds.erase(m_pollfds.begin() + pollFdIndex);
+					break;
+				}
+			}
+		}
+
+		m_clients.erase(m_clients.begin() + clientIndex);
 	}
 
 // TODO: make private

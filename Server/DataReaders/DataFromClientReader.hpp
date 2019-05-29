@@ -2,6 +2,7 @@
 #define DataFromClientReader_hpp
 
 #include "../Client.hpp"
+#include <chrono>
 
 class DataFromClientReader
 {
@@ -18,6 +19,10 @@ public:
 		else {
 			client.clientConnectionPollFD->events = POLLIN;
 		}
+
+		if(operationStatus > 0)
+			client.timestamp = std::chrono::high_resolution_clock::now();
+
 		return operationStatus;
 	}
 
@@ -33,6 +38,10 @@ public:
 		else {
 			client.clientConnectionPollFD->events = POLLIN;
 		}
+
+		if(operationStatus > 0)
+			client.timestamp = std::chrono::high_resolution_clock::now();
+		
 		return operationStatus;
 	}
 

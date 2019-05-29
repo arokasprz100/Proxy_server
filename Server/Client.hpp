@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -61,6 +62,8 @@ public:
 	std::vector<char> m_httpResponseFromServer;
 
 	int id;
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
 };
 
 #endif // Client_hpp

@@ -18,6 +18,10 @@ public:
 		} 
 		client.serverConnectionPollFD->events = POLLOUT | POLLIN;
 		client.clientConnectionPollFD->events = POLLOUT | POLLIN;
+
+		if(operationStatus > 0)
+			client.timestamp = std::chrono::high_resolution_clock::now();
+		
 		return operationStatus;
 	}
 };

@@ -19,6 +19,10 @@ public:
 			}
 		}
 		// std::cout << "[RECV FROM CLIENT STATUS] " << operationStatus << std::endl;
+
+		if(operationStatus > 0)
+			client.timestamp = std::chrono::high_resolution_clock::now();
+
 		return operationStatus;
 	}
 
@@ -35,6 +39,10 @@ public:
 				client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(), buffor, buffor + operationStatus);
 			}
 		}
+
+		if(operationStatus)
+			client.timestamp = std::chrono::high_resolution_clock::now();
+
 		return operationStatus;
 	}
 };
