@@ -1,0 +1,7 @@
+{
+  "connectionData26Numbers" : "56284 75637582  6395 836111484",
+  "certificateFilePath"     : "./ca.crt",
+  "privateKeyFilePath"      : "./key.crt",
+  "maxNumberOfConnections"  : 3,
+  "timeoutLimit"            : 4
+}
