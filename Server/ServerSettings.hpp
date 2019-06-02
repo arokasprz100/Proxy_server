@@ -12,8 +12,6 @@
 using namespace boost::property_tree;
 class ServerSettings
 {
-
-
 public:
 
 	ServerSettings() { setCurrentTreeToDefault(); }
@@ -37,18 +35,7 @@ public:
 		}
 	}
 
-	// Debug function
-	void printCurrentTree() {
-		write_json(std::cout, *currentTree);
-	}
-
-	void readJson(std::string jsonPath) {
-		createCurrentTree();
-		read_json(jsonPath, *currentTree);
-		processNumbers();
-	}
-
-	void processNumbers() {
+	void validateJsonFields() {
 		if (currentTree != NULL) {
 			std::string connectionData26Numbers = currentTree->get<std::string>("connectionData26Numbers");
 			std::string maxNumberOfConnections = currentTree->get<std::string>("maxNumberOfConnections");
@@ -57,31 +44,53 @@ public:
 																									 connectionData26Numbers.end(),
 																									 ::isspace),
 			 															connectionData26Numbers.end());
-			// poprawie to bo jest chujowe
-			for (int i=0; i<connectionData26Numbers.length(); i++) {
-				if (isdigit(connectionData26Numbers[i]) == false) {
-					std::cout << "wrong connectionData26Numbers" << std::endl; //debug
-				} // Exception
+			try {
+
+				if (connectionData26Numbers.length() < 26 || connectionData26Numbers.length() > 26)
+					throw wrongJsonDataException();
+
+				for (int i=0; i<connectionData26Numbers.length(); i++)
+					if (isdigit(connectionData26Numbers[i]) == false)
+						throw wrongJsonDataException();
+
+				for (int i=0; i<maxNumberOfConnections.length(); i++)
+					if (isdigit(maxNumberOfConnections[i]) == false)
+						throw wrongJsonDataException();
+
+				for (int i=0; i<timeoutLimit.length(); i++)
+					if (isdigit(timeoutLimit[i]) == false)
+						throw wrongJsonDataException();
+
+			} catch (wrongJsonDataException& e) {
+				// TODO: what should happen?
+				std::cout << e.what() << std::endl;
 			}
-			if (connectionData26Numbers.length() < 26 || connectionData26Numbers.length() > 26) {
-				std::cout << "wrong connectionData26Numbers" << std::endl; //debug
-				// Exception
-			}
-			for (int i=0; i<maxNumberOfConnections.length(); i++) {
-				if (isdigit(maxNumberOfConnections[i]) == false) {
-					std::cout << "wrong maxNumberOfConnections" << std::endl; //debug
-				} // Exception
-			}
-			for (int i=0; i<timeoutLimit.length(); i++) {
-				if (isdigit(timeoutLimit[i]) == false) {
-					std::cout << "wrong timeoutLimit" << std::endl; //debug
-				} // Exception
-			}
+
 			setConnectionData26Numbers(connectionData26Numbers);
 			setMaxNumberOfConnections(maxNumberOfConnections);
 			setTimeoutLimit(timeoutLimit);
 		}
 	}
+
+	void readJson(std::string jsonPath) {
+		createCurrentTree();
+		read_json(jsonPath, *currentTree);
+		validateJsonFields();
+	}
+
+	// TODO: don't understand what's wrong with write_json
+	// tried many different ways and nothing worked.
+	void writeJson(std::string jsonPath) {
+		if (currentTree == NULL) createCurrentTree();
+		// write_json(jsonPath, currentTree);
+	}
+
+
+	// Debug function
+	void printCurrentTree() {
+		write_json(std::cout, *currentTree);
+	}
+
 
 	std::string getConnectionData26Numbers() {
 		if (currentTree != NULL) return currentTree->get<std::string>("connectionData26Numbers");
@@ -104,6 +113,8 @@ public:
 		else return NULL;
 	}
 
+	// Setters for internal server use in order to modify
+	// json values accordingly.
 	void setConnectionData26Numbers(std::string connectionData26Numbers) {
 		if (currentTree != NULL) currentTree->put("connectionData26Numbers", connectionData26Numbers);
 	}
@@ -124,12 +135,19 @@ public:
 private:
 	ptree* currentTree = NULL;
 
+	// TODO: this is just sample data used for testing.
+	// Needs to be filled in with actual default data as
+	// this is used in the constructor.
 	const std::vector<std::pair<std::string, std::string>> treeDefaultvalues = {
-    {"connectionData26Numbers", "56284756375826395836111484"},
+    {"connectionData26Numbers", "562847563758263a95836111484"},
 		{"certificateFilePath", "./ca.crt"},
 		{"privateKeyFilePath", "./key.crt"},
 		{"maxNumberOfConnections", "3"},
 		{"timeoutLimit", "4"},
+	};
+
+	struct wrongJsonDataException : public std::exception {
+		const char* what() const throw() { return "Wrong data provided in Json input"; }
 	};
 };
 
