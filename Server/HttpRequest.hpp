@@ -6,14 +6,14 @@
 enum class Method {GET, POST, HEAD, PUT, DELETE, CONNECT, OPTIONS, TRACE, ERROR};
 
 #include <string>
-
+#include <map>
 
 class HttpRequest
 {
 public:
 
-	HttpRequest(Method method, const std::vector<char>& resourcePath, const std::vector<char>& header)
-		: m_method(method), m_resourcePath(resourcePath), m_header(header) {}
+	HttpRequest(Method method, const std::vector<char>& resourcePath, const std::map<std::string, std::string> headers)
+		: m_method(method), m_resourcePath(resourcePath), m_headers(headers) {}
 
 	Method getHttpMethod() const {
 		return m_method;
@@ -23,15 +23,15 @@ public:
 		return m_resourcePath;
 	}
 
-	const std::vector<char> getHeader() const {
-		return m_header;
+	const std::map<std::string, std::string> getHeader() const {
+		return m_headers;
 	}
 
 private:
 
 	Method m_method;
 	std::vector<char> m_resourcePath;
-	std::vector<char> m_header;
+	std::map<std::string, std::string> m_headers;
 
 };
 
