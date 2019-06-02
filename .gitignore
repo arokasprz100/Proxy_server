@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+Driver
+Driver.cpp
+Makefile
+*.cmake
+*.txt
