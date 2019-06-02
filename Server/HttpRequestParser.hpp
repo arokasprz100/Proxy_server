@@ -35,22 +35,19 @@ public:
 			// TODO: What if there are no headers?
 		}
 
-		for (unsigned int i=2; i<httpRequestLines.size(); ++i)
-			std::cout << vectorToString(httpRequestLines[i]) << std::endl;
-
-		std::map<std::string, std::string> headers = processHeaders(httpRequestLines);
-
+		std::cout << "Received Http Request " << std::endl;
 		std::vector<char> httpMethodVector = httpRequestLines[0];
+		Method httpMethod = findHttpMethod(vectorToString(httpMethodVector));
+		std::cout << "Http method: " << vectorToString(httpMethodVector)  << std::endl;
+
 		std::vector<char> pathToResource = httpRequestLines[1];
 		const char* dir = "../Strona/";
 		const char* length = dir + strlen(dir);
 		pathToResource.insert(pathToResource.begin(), dir, length);
-
-		Method httpMethod = findHttpMethod(vectorToString(httpMethodVector));
-
-		std::cout << "Received Http Request " << std::endl;
-		std::cout << "Http method: " << vectorToString(httpMethodVector)  << std::endl;
 		std::cout << "Path to resource: " << vectorToString(pathToResource) << std::endl;
+
+		std::map<std::string, std::string> headers = processHeaders(httpRequestLines);
+		printHeaders(headers);
 
 		return new HttpRequest(httpMethod, pathToResource, headers);
 	}
@@ -76,7 +73,6 @@ public:
 			headers.insert(std::pair<std::string, std::string>(vectorToString(header), vectorToString(value)));
 
 		}
-		printHeaders(headers);
 		return headers;
 	}
 
@@ -85,7 +81,6 @@ public:
 		for(auto it = headers.begin(); it != headers.end(); ++it) {
     	std::cout << it->first << ": " << it->second << std::endl;
 		}
-		std::cout << std::endl;
 	}
 
 
