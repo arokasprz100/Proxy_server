@@ -65,6 +65,8 @@ void PSiCAlgorithm::lookForSequences(std::vector<char>& input)
 					if(seqChar >= '0' && seqChar <= '9')
 						seqChar = PSiCAlgorithm::desiredSequenceString.at(j++);
 				}
+
+				found.clear();
 			}
 		}
 		else if(curr != ' ')
