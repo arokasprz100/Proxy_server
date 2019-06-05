@@ -18,7 +18,8 @@ public:
 			("encrypted,e", "Use encrypted connection between client and proxy")
 			("unencrypted,u", "Use unencrypted connection between client and proxy, this option is selected by default")
 			("silent,s", "Do not display log messages, this option is selected by default")
-			("verbose,v", "Display log messages to console");
+			("verbose,v", "Display log messages to console")
+			("menu,m", "Display interactive settings menu. Disabled by default.");
 
 		opts::variables_map map;
 		try
@@ -43,8 +44,9 @@ public:
 
 		LogType logType = getLogSettings(map, desc);
 		ClientConnectionType clientConnectionType = getClientConnectionSettings(map, desc);
+		bool shouldRunSettingsMenu = getMenuSettings(map);
 		
-		return InputSettings(logType, clientConnectionType);
+		return InputSettings(logType, clientConnectionType, shouldRunSettingsMenu);
 
 	}
 
@@ -80,6 +82,11 @@ private:
 		else {
 			return ClientConnectionType::UNENCRYPTED;
 		}
+	}
+
+	static bool getMenuSettings(const boost::program_options::variables_map& map)
+	{
+		return map.count("menu");
 	}
 
 };

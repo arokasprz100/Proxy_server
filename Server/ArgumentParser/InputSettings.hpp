@@ -8,10 +8,8 @@ class InputSettings
 {
 public:
 
-	InputSettings(const LogType& logType, const ClientConnectionType& clientConnectionType) {
-		this->logType = logType;
-		this->clientConnectionType = clientConnectionType;
-	}
+	InputSettings(const LogType& logType, const ClientConnectionType& clientConnectionType, bool shouldRunMenu)
+		: logType(logType), clientConnectionType(clientConnectionType), shouldRunMenu(shouldRunMenu) {}
 
 	const LogType& getLogType() const {
 		return logType;
@@ -21,10 +19,15 @@ public:
 		return clientConnectionType;
 	}
 
+	bool getIfShouldRunMenu() const {
+		return shouldRunMenu;
+	}
+
 private:
 
 	LogType logType = LogType::SILENT;
 	ClientConnectionType clientConnectionType = ClientConnectionType::UNENCRYPTED;
+	bool shouldRunMenu = false;
 
 
 };

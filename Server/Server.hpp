@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <chrono>
 
-#include "SSLInitializer.hpp"
-#include "ServerInitializer.hpp"
+#include "Initializers/SSLInitializer.hpp"
+#include "Initializers/ServerInitializer.hpp"
 
 #include "IPAndPortExtractor.hpp"
 #include "HostConnector.hpp"
@@ -40,20 +40,21 @@
 #include "DataReaders/DataFromServerReader.hpp"
 #include "DataWriters/DataToServerWriter.hpp"
 
+#include "ServerSettings/ServerSettings.hpp"
+
 /*
-TODO: integrate settings 
 TODO: integrate http request parser (and protocol and size constraints)
 TODO: integrate algorithm
 TODO: refactor
 TODO: write doxs
-
 */
 
 class Server
 {
 public:
 
-	Server(int port, ClientConnectionType clientConnectionType) : 
+	Server(int port, ClientConnectionType clientConnectionType, const ServerSettings& serverSettings) : 
+		serverSettings(serverSettings),
 		unencryptedDataFromClientReader(DataFromClientReaderChooser::chooseUnencryptedDataFromClientReader(clientConnectionType)),
 		encryptedDataFromClientReader(DataFromClientReaderChooser::chooseEncryptedDataFromClientReader(clientConnectionType)),
 		dataToClientWriter(DataToClientWriterChooser::chooseDataToClientWriter(clientConnectionType)),
@@ -67,7 +68,7 @@ public:
 		m_serverAddr = serverAddr;
 
 		if (clientConnectionType == ClientConnectionType::ENCRYPTED) {
-			m_ctx = SSLInitializer::initialize();
+			m_ctx = SSLInitializer::initialize(serverSettings.getCertificateFilePath(), serverSettings.getPrivateKeyFilePath());
 		}
 
 		LogSystem::logMessage("Server started.", "START");
@@ -89,11 +90,11 @@ public:
 			performPoll();
 
 			if (m_pollfds.at(0).revents & POLLIN) {
-				if (m_clients.size() <= 100) {
+				if (m_clients.size() <= serverSettings.getMaxNumberOfConnections()) {
 					acceptNewConnection();
 				}
 				else {
-					LogSystem::logMessage("Maximum number of connections reacher.", "ACCEPTING");
+					LogSystem::logMessage("Maximum number of connections reached.", "ACCEPTING");
 				}
 			}
 
@@ -304,6 +305,8 @@ private: // state
 	int m_serverSocket;
 	sockaddr_in m_serverAddr;
 	SSL_CTX* m_ctx;
+
+	const ServerSettings& serverSettings; // TODO: make unique_ptr
 
 	std::vector<pollfd> m_pollfds;
 	std::vector<Client> m_clients;

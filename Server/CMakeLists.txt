@@ -17,6 +17,8 @@ file(GLOB Server_src
     "LogSystem/*.cpp"
     "OperationStatusHandlers/*.hpp"
     "OperationStatusHandlers/*.cpp"
+    "ServerSettings/*.hpp"
+    "ServerSettings/*.cpp"
     "ClientAcceptors/*.hpp"
     "ClientAcceptors/*.cpp"
     "ArgumentParser/*.hpp")

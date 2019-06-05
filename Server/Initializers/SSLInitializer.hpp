@@ -4,16 +4,14 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include "ServerSettings.hpp"
-
 class SSLInitializer final
 {
 public:
 
-	static SSL_CTX* initialize() {
+	static SSL_CTX* initialize(const std::string& certificateFilePath, const std::string& privateKeyFilePath) {
 		initOpenssl();
 		SSL_CTX* ctx = prepareContext();
-		configureContextKeyAndCert(ctx);
+		configureContextKeyAndCert(ctx, certificateFilePath, privateKeyFilePath);
 		return ctx;
 	}
 
@@ -37,16 +35,16 @@ private:
 		return ctx;
 	}
 
-	static void configureContextKeyAndCert(SSL_CTX * ctx)
+	static void configureContextKeyAndCert(SSL_CTX * ctx, const std::string& certificateFilePath, const std::string& privateKeyFilePath)
 	{
 		SSL_CTX_set_ecdh_auto(ctx, 1);
 
-		if (SSL_CTX_use_certificate_file(ctx, ServerSettings::certificateFilePath, SSL_FILETYPE_PEM) <= 0) {
+		if (SSL_CTX_use_certificate_file(ctx, certificateFilePath.c_str(), SSL_FILETYPE_PEM) <= 0) {
 			ERR_print_errors_fp(stderr);
 			exit(EXIT_FAILURE);
 		}
 
-		if (SSL_CTX_use_PrivateKey_file(ctx, ServerSettings::privateKeyFilePath, SSL_FILETYPE_PEM) <= 0 ) {
+		if (SSL_CTX_use_PrivateKey_file(ctx, privateKeyFilePath.c_str(), SSL_FILETYPE_PEM) <= 0 ) {
 			ERR_print_errors_fp(stderr);
 			exit(EXIT_FAILURE);
 		}

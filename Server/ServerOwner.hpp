@@ -3,14 +3,15 @@
 
 #include "Server.hpp"
 #include "ClientConnectionType.hpp"
+#include "ServerSettings/ServerSettings.hpp"
 #include <signal.h>
 
 class ServerOwner
 {
 public:
 
-	static void startServer(int port, ClientConnectionType clientConnectionType) {
-		server = new Server(port, clientConnectionType);
+	static void startServer(int port, ClientConnectionType clientConnectionType, const ServerSettings& serverSettings) {
+		server = new Server(port, clientConnectionType, serverSettings);
 		server->startHandlingClients();
 	}
 
