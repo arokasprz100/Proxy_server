@@ -6,8 +6,8 @@
 int main(int argc, char** argv)
 {
 	signal(SIGINT, sigintHandler); 
-	LogSystem::initialize(LogType::CONSOLE);
-	ArgumentParser::parse(argc, argv);
-	ServerOwner::startServer(8080);
+	InputSettings inputSettings = ArgumentParser::parse(argc, argv);
+	LogSystem::initialize(inputSettings.getLogType());
+	ServerOwner::startServer(8080, inputSettings.getClientConnectionType());
 	return 0;
 }

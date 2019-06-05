@@ -76,7 +76,6 @@ private:
 
 	static void prepareServerPollFD(int serverSocket, std::vector<pollfd>& pollFDs)
 	{
-		pollFDs.reserve(400);
 		pollFDs.push_back({serverSocket, POLLIN, 0});
 	}
 

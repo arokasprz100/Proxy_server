@@ -1,36 +1,27 @@
 #ifndef DataToClientWriter_hpp
 #define DataToClientWriter_hpp
 
+#include "../LogSystem/LogSystem.hpp"
+
 class DataToClientWriter
 {
 public:
 
-	// TUTAJ POLL SA DOBRZE
-	static int writeDataToClient(Client& client) {
-		int dataToSendSize = client.m_httpResponseFromServer.size();
-		//std::cout << "DATA TO SEND SIZE = " << dataToSendSize << std::endl;
-		int dataAlreadyWritenSize = 0;
-		int operationStatus = 0;
-		while (true) {
-			operationStatus = send(client.clientSocket, 
-				client.m_httpResponseFromServer.data() + dataAlreadyWritenSize, 
-				client.m_httpResponseFromServer.size() - dataAlreadyWritenSize, MSG_NOSIGNAL);
-			//std::cout << "[WRITING TO CLIENT STATUS] " << operationStatus << std::endl;
-			if (operationStatus <= 0) {
-				client.clientConnectionPollFD->events |= POLLOUT; // nie udalo sie zapisac danych, chcemy pisac jeszcze raz
-				return operationStatus;
-			}
-			dataAlreadyWritenSize += operationStatus;
-			if (dataAlreadyWritenSize == dataToSendSize) {
-				client.m_httpResponseFromServer.clear();
-				client.clientConnectionPollFD->events = POLLIN; // udalo sie zapisac dane, chcemy czytac dane od klienta
+	static int write (Client& client) {
 
-				if(operationStatus > 0)
-					client.timestamp = std::chrono::high_resolution_clock::now();
+		int operationStatus = send(client.clientSocket,
+			client.m_httpResponseFromServer.data(),
+			client.m_httpResponseFromServer.size(), MSG_NOSIGNAL);
 
-				return operationStatus;
-			}
+		LogSystem::logMessage("Data writen to client", "PROXY->CLIENT", std::to_string(operationStatus), std::to_string(client.getID()));
+
+		if (operationStatus > 0) {
+			client.refreshTimestamp();
+			client.m_httpResponseFromServer.erase(client.m_httpResponseFromServer.begin(),
+				client.m_httpResponseFromServer.begin() + operationStatus);
 		}
+
+		return operationStatus;
 	}
 
 };

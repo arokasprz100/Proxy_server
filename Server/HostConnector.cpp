@@ -1,7 +1,8 @@
 #include "HostConnector.hpp"
 #include "Server.hpp"
+#include "LogSystem/LogSystem.hpp"
 
-void HostConnector::connectToHost(Client& client, const std::string& hostIp, int port, Server& server) {
+pollfd HostConnector::connectToHost(Client& client, const std::string& hostIp, int port) {
 
 	client.serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (client.serverSocket== -1) {
@@ -29,8 +30,7 @@ void HostConnector::connectToHost(Client& client, const std::string& hostIp, int
 		exit(1);
 	}
 
-	server.m_pollfds.push_back({client.serverSocket, POLLIN | POLLOUT, 0});
-	client.serverConnectionPollFD = &(server.m_pollfds.back());
+	LogSystem::logMessage("Connected successfully", "NEW CONNECTION", std::to_string(client.getID()));
 
-	std::cout << "Connected successfully" << std::endl;
+	return {client.serverSocket, POLLIN | POLLOUT, 0};
 }

@@ -5,43 +5,32 @@ class SSLDataFromClientReader
 {
 public:
 
-	static int readUnencryptedDataFromClient(Client& client) {
-		char buffor[3000] = {'\0'};
-		int operationStatus = SSL_read(client.ssl, buffor, 2999);
-		if (operationStatus > 0) {
-			client.addDataFromClient(std::vector<char>(buffor, buffor + operationStatus));
-		}
-		while (SSL_pending(client.ssl)) {
-			char buffor2[3000] = {'\0'};
-			operationStatus = SSL_read(client.ssl, buffor2, 2999);
+	static int readUnencryptedData(Client& client) {
+		int operationStatus = 0;
+		do {
+			char buffor[1000] = {'\0'};
+			operationStatus = SSL_read(client.ssl, buffor, 999);
 			if (operationStatus > 0) {
-				client.addDataFromClient(std::vector<char>(buffor2, buffor2 + operationStatus));
+				client.refreshTimestamp();
+				client.addDataFromClient(std::vector<char>(buffor, buffor + operationStatus));
 			}
-		}
-		// std::cout << "[RECV FROM CLIENT STATUS] " << operationStatus << std::endl;
 
-		if(operationStatus > 0)
-			client.timestamp = std::chrono::high_resolution_clock::now();
+		} while (SSL_pending(client.ssl));
 
 		return operationStatus;
 	}
 
-	static int readEncryptedDataFromClient(Client& client) {
-		char buffor[3000] = {'\0'};
-		int operationStatus = SSL_read(client.ssl, buffor, 2999);
-		if (operationStatus > 0) {
-			client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(), buffor, buffor + operationStatus);
-		}
-		while (SSL_pending(client.ssl)) {
-			char buffor2[3000] = {'\0'};
-			operationStatus = SSL_read(client.ssl, buffor2, 2999);
+	static int readEncryptedData(Client& client) {
+		int operationStatus = 0;
+		do {
+			char buffor[1000] = {'\0'};
+			operationStatus = SSL_read(client.ssl, buffor, 999);
 			if (operationStatus > 0) {
+				client.refreshTimestamp();
 				client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(), buffor, buffor + operationStatus);
 			}
-		}
 
-		if(operationStatus)
-			client.timestamp = std::chrono::high_resolution_clock::now();
+		} while (SSL_pending(client.ssl));
 
 		return operationStatus;
 	}

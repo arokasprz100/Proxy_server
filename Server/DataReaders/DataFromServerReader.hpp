@@ -7,21 +7,17 @@ class DataFromServerReader
 {
 public:
 
-	static int readDataFromServer(Client& client) {
-		char buffor[1009] = {'\0'};
+	static int read(Client& client) {
+		char buffor[1000] = {'\0'};
 		int operationStatus = recv(client.serverSocket, buffor, 999, 0);
-		//ConsoleLog::logMessage("RECV FROM SERVER STATUS", std::to_string(operationStatus), client.id);
-		if (operationStatus > 0) {
-			client.m_httpResponseFromServer.insert(client.m_httpResponseFromServer.end(), 
-				buffor, 
-				buffor + operationStatus);
-		} 
-		client.serverConnectionPollFD->events = POLLOUT | POLLIN;
-		client.clientConnectionPollFD->events = POLLOUT | POLLIN;
 
-		if(operationStatus > 0)
-			client.timestamp = std::chrono::high_resolution_clock::now();
-		
+		if (operationStatus > 0) {
+			LogSystem::logMessage("Received data from server", "SERVER->PROXY", std::to_string(operationStatus), std::to_string(client.getID()));
+			client.refreshTimestamp();
+			client.m_httpResponseFromServer.insert(client.m_httpResponseFromServer.end(), 
+				buffor, buffor + operationStatus);
+		} 
+
 		return operationStatus;
 	}
 };

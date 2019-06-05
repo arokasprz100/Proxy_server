@@ -2,14 +2,15 @@
 #define ServerOwner_hpp
 
 #include "Server.hpp"
+#include "ClientConnectionType.hpp"
 #include <signal.h>
 
 class ServerOwner
 {
 public:
 
-	static void startServer(int port) {
-		server = new Server(port);
+	static void startServer(int port, ClientConnectionType clientConnectionType) {
+		server = new Server(port, clientConnectionType);
 		server->startHandlingClients();
 	}
 

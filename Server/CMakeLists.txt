@@ -15,6 +15,10 @@ file(GLOB Server_src
     "DataWriters/*.cpp"
     "LogSystem/*.hpp"
     "LogSystem/*.cpp"
+    "OperationStatusHandlers/*.hpp"
+    "OperationStatusHandlers/*.cpp"
+    "ClientAcceptors/*.hpp"
+    "ClientAcceptors/*.cpp"
     "ArgumentParser/*.hpp")
 
 add_executable(Server

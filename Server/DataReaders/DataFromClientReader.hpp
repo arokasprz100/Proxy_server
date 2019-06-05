@@ -8,39 +8,24 @@ class DataFromClientReader
 {
 public:
 
-	static int readUnencryptedDataFromClient(Client& client) {
-		char buffor[3000] = {'\0'};
-		int operationStatus = recv(client.clientSocket, buffor, 2999, 0);
-		//std::cout << "[RECV FROM CLIENT STATUS] " << operationStatus << std::endl;
+	static int readUnencryptedData(Client& client) {
+		char buffor[1000] = {'\0'};
+		int operationStatus = recv(client.clientSocket, buffor, 999, MSG_NOSIGNAL);
 		if (operationStatus > 0) {
+			client.refreshTimestamp();
 			client.addDataFromClient(std::vector<char>(buffor, buffor + operationStatus));
-			client.clientConnectionPollFD->events = POLLIN;
-		} 
-		else {
-			client.clientConnectionPollFD->events = POLLIN;
 		}
-
-		if(operationStatus > 0)
-			client.timestamp = std::chrono::high_resolution_clock::now();
 
 		return operationStatus;
 	}
 
-	static int readEncryptedDataFromClient(Client& client) {
-		char buffor[30000] = {'\0'};
-		//operationStatus = SSL_read(client.ssl, buffor, 999);
-		int operationStatus = recv(client.clientSocket, buffor, 29999, 0);
+	static int readEncryptedData(Client& client) {
+		char buffor[1000] = {'\0'};
+		int operationStatus = recv(client.clientSocket, buffor, 999, MSG_NOSIGNAL);
 		if (operationStatus > 0) {
-			//std::cout << "[RECV FROM CLIENT STATUS] " << operationStatus << std::endl;
+			client.refreshTimestamp();
 			client.m_httpRequestFromClient = std::vector<char>(buffor, buffor + operationStatus);
-			client.clientConnectionPollFD->events = POLLOUT;
 		}
-		else {
-			client.clientConnectionPollFD->events = POLLIN;
-		}
-
-		if(operationStatus > 0)
-			client.timestamp = std::chrono::high_resolution_clock::now();
 		
 		return operationStatus;
 	}

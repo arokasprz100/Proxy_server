@@ -12,8 +12,7 @@ class HostConnector
 {
 public:
 
-	// TODO: remove Server from arguments
-	static void connectToHost(Client& client, const std::string& hostIp, int port, Server& server);
+	static pollfd connectToHost(Client& client, const std::string& hostIp, int port);
 };
 
 #endif // HostConnector_hpp

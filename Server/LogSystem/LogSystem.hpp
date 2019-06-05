@@ -4,16 +4,13 @@
 #include "Logging.hpp"
 #include "ConsoleLog.hpp"
 #include "SilentLog.hpp"
+#include "LogType.hpp"
 
 #include <map>
 #include <memory>
 #include <type_traits>
 #include <string>
 
-enum class LogType {
-	CONSOLE,
-	SILENT
-};
 
 template<typename... Types>
 using AllArgsAreStrings = typename std::conjunction<std::is_convertible<Types, std::string>...>::type;

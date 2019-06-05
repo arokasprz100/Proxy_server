@@ -24,11 +24,13 @@ class Client
 {
 public:
 
-	Client (SSL* ssl, sockaddr_in clientAddr) 
-		: ssl(ssl), m_clientAddr(clientAddr)
-	{
-		std::cout << "New client created" << std::endl;
-	}
+	Client (SSL* ssl, sockaddr_in clientAddr, int clientSocket) : 
+		ssl(ssl), 
+		clientSocket(clientSocket),
+		serverSocket(-1),
+		m_clientAddr(clientAddr),
+		id(nextClientID++),
+		timestamp(std::chrono::high_resolution_clock::now()) {}
 
 	void clearDataFromClient() {
 		m_dataFromClient.clear();
@@ -43,7 +45,27 @@ public:
 		return m_dataFromClient;
 	}
 
-	SSL* ssl;
+	void setConnectionType(ConnectionType connectionType) {
+		this->connectionType = connectionType;
+	}
+
+	const ConnectionType& getConnectionType() const {
+		return connectionType;
+	}
+
+	int getID() const {
+		return id;
+	}
+
+	void refreshTimestamp() {
+		timestamp = std::chrono::high_resolution_clock::now();
+	}
+
+	const auto& getCurrentTimestamp() const {
+		return timestamp;
+	}
+
+	SSL* ssl = nullptr;
 
 	int clientSocket;
 	int serverSocket;
@@ -51,19 +73,19 @@ public:
 	sockaddr_in m_serverAddr;
 	sockaddr_in m_clientAddr;
 
-	ConnectionType connectionType = ConnectionType::UNDEFINED;
-
-	pollfd* clientConnectionPollFD = nullptr;
-	pollfd* serverConnectionPollFD = nullptr;
-
 	std::vector<char> m_dataFromClient; 
 
 	std::vector<char> m_httpRequestFromClient;
 	std::vector<char> m_httpResponseFromServer;
 
-	int id;
+private:
 
+	static int nextClientID;
+
+	int id;
 	std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
+	ConnectionType connectionType = ConnectionType::UNDEFINED;
+
 };
 
 #endif // Client_hpp

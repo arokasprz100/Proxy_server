@@ -1,8 +1,6 @@
 #ifndef Server_hpp
 #define Server_hpp
 
-#include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -12,7 +10,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 #include <algorithm>
 #include <chrono>
 
@@ -28,80 +25,119 @@
 #include "RequestURIParser.hpp"
 #include "HttpRequestParserDummy.hpp"
 
-#include "DataReaders/DataFromClientReader.hpp"
-#include "DataReaders/SSLDataFromClientReader.hpp"
-#include "DataReaders/DataFromServerReader.hpp"
-
-#include "DataWriters/DataToServerWriter.hpp"
-#include "DataWriters/DataToClientWriter.hpp"
-#include "DataWriters/SSLDataToClientWriter.hpp"
-
 #include "LogSystem/LogSystem.hpp"
+
+#include "ClientConnectionType.hpp"
+
+#include "ClientAcceptors/ClientAcceptorChooser.hpp"
+#include "DataReaders/DataFromClientReaderChooser.hpp"
+#include "DataWriters/DataToClientWriterChooser.hpp"
+#include "OperationStatusHandlers/OperationStatusHandlerChooser.hpp"
+
+#include "Disconnectors/HostDisconnector.hpp"
+#include "Disconnectors/ClientDisconnector.hpp"
+
+#include "DataReaders/DataFromServerReader.hpp"
+#include "DataWriters/DataToServerWriter.hpp"
+
+/*
+TODO: integrate settings 
+TODO: integrate http request parser (and protocol and size constraints)
+TODO: integrate algorithm
+TODO: refactor
+TODO: write doxs
+
+*/
 
 class Server
 {
 public:
 
-	Server(int port)
+	Server(int port, ClientConnectionType clientConnectionType) : 
+		unencryptedDataFromClientReader(DataFromClientReaderChooser::chooseUnencryptedDataFromClientReader(clientConnectionType)),
+		encryptedDataFromClientReader(DataFromClientReaderChooser::chooseEncryptedDataFromClientReader(clientConnectionType)),
+		dataToClientWriter(DataToClientWriterChooser::chooseDataToClientWriter(clientConnectionType)),
+		operationStatusHandler(OperationStatusHandlerChooser::chooseOperationStatusHandler(clientConnectionType)),
+		clientAcceptor(ClientAcceptorChooser::chooseClientAcceptor(clientConnectionType))
 	{	
-		std::cout << " ==== Starting new server ==== " << std::endl;
+		LogSystem::logMessage("Starting new server.", "START");
 
 		auto[serverSocket, serverAddr] = ServerInitializer::initialize(port, m_pollfds);
 		m_serverSocket = serverSocket;
 		m_serverAddr = serverAddr;
 
-		m_ctx = SSLInitializer::initialize();
+		if (clientConnectionType == ClientConnectionType::ENCRYPTED) {
+			m_ctx = SSLInitializer::initialize();
+		}
 
-		std::cout << " ==== Server started ==== " << std::endl;
+		LogSystem::logMessage("Server started.", "START");
+	}
+
+	~Server() {
+		for (long unsigned int clientIndex = 0; clientIndex < m_clients.size(); ++clientIndex) {
+			auto& client = m_clients[clientIndex];
+			closeConnection(client, clientIndex);
+		}
+
+		LogSystem::logMessage("Closing server.", "CLOSE");
 	}
 
 	void startHandlingClients() 
 	{
 		while(1) 
 		{	
-			performPoll(m_pollfds);
+			performPoll();
 
 			if (m_pollfds.at(0).revents & POLLIN) {
-				acceptNewConnection();
+				if (m_clients.size() <= 100) {
+					acceptNewConnection();
+				}
+				else {
+					LogSystem::logMessage("Maximum number of connections reacher.", "ACCEPTING");
+				}
 			}
 
-			for (long unsigned int clientIndex = 0; clientIndex < m_clients.size(); clientIndex++) 
+			for (long unsigned int clientIndex = 0; clientIndex < m_clients.size(); ++clientIndex) 
 			{
 				auto& client = m_clients[clientIndex];
 				int operationStatus = 0;
 
+				auto clientConnectionPollFD = getPollFD(client.clientSocket);
+				auto serverConnectionPollFD = getPollFD(client.serverSocket);
+
 				// odbieranie niezaszyfrowanych danych - poczatek polaczenia
-				if (client.clientConnectionPollFD->revents & (POLLIN | POLLOUT))
+				if (clientConnectionPollFD->revents & (POLLIN | POLLOUT))
 				{
-					if (client.connectionType == ConnectionType::UNDEFINED) {	
-						operationStatus = SSLDataFromClientReader::readUnencryptedDataFromClient(client);
-						handleOperationStatus(client, operationStatus);
+					if (client.getConnectionType() == ConnectionType::UNDEFINED) {	
+						operationStatus = unencryptedDataFromClientReader(client);
+						operationStatusHandler(client, operationStatus, clientConnectionPollFD);
 					}
 				}
 
 				// sekcja odpowiedzialna tylko za forwardowanie polaczenia tls
-				if (client.connectionType == ConnectionType::ENCRYPTED) {
+				if (client.getConnectionType() == ConnectionType::ENCRYPTED) {
 
 					// odbieranie danych od klienta
-					if (client.clientConnectionPollFD->revents & (POLLIN | POLLOUT)) {
-						operationStatus = SSLDataFromClientReader::readEncryptedDataFromClient(client);
-						handleOperationStatus(client, operationStatus);
-
+					if (clientConnectionPollFD->revents & (POLLIN | POLLOUT)) {
+						operationStatus = encryptedDataFromClientReader(client);
+						operationStatusHandler(client, operationStatus, clientConnectionPollFD);
+						serverConnectionPollFD->events = POLLOUT | POLLIN;
 					}
 				}
 
 				// tylko nieszyfrowane dane
-				if (client.connectionType == ConnectionType::PLAIN_TEXT) {
+				if (client.getConnectionType() == ConnectionType::PLAIN_TEXT) {
 
 					// odbieranie danych od klienta
-					if (client.clientConnectionPollFD->revents & (POLLIN | POLLOUT)) {
-						operationStatus = SSLDataFromClientReader::readUnencryptedDataFromClient(client);
-						handleOperationStatus(client, operationStatus);
+					if (clientConnectionPollFD->revents & (POLLIN | POLLOUT)) {
+						operationStatus = unencryptedDataFromClientReader(client);
+						operationStatusHandler(client, operationStatus, clientConnectionPollFD);
+						serverConnectionPollFD->events = POLLOUT | POLLIN;
 					}
 				}
 					
 
-				if (client.clientConnectionPollFD->revents & (POLLIN | POLLOUT) && client.connectionType != ConnectionType::ENCRYPTED)
+				if (clientConnectionPollFD->revents & (POLLIN | POLLOUT) && client.getConnectionType() != ConnectionType::ENCRYPTED)
 				{
 
 					// if full http request present
@@ -118,12 +154,17 @@ public:
 
 						// if connect method received, make connection to server
 						if (request.method == "CONNECT") {
-							LogSystem::logMessage("Full CONNECT request received", "RECEIVED", std::to_string(client.id));
 
-							auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(request.hostname);
-							HostConnector::connectToHost(client, ip, port, *this);
+							if (client.getConnectionType() == ConnectionType::UNDEFINED) {
+								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(request.hostname);
+								auto pollFD = HostConnector::connectToHost(client, ip, port);
+								m_pollfds.push_back(pollFD);
+								client.setConnectionType(ConnectionType::ENCRYPTED);
+								clientConnectionPollFD = getPollFD(client.clientSocket);
+								serverConnectionPollFD = getPollFD(client.serverSocket);
+							}
 
-							client.connectionType = ConnectionType::ENCRYPTED;
+							LogSystem::logMessage("Full CONNECT request received", "RECEIVED", std::to_string(client.getID()));
 
 							// set 200 confirming that it worked
 							std::string tempHttpResp = std::string("HTTP/1.1 200 Connection Established\r\n") + 
@@ -132,24 +173,27 @@ public:
 								"Connection: Keep-Alive\r\n\r\n";
 							client.m_httpResponseFromServer = std::vector<char>(tempHttpResp.begin(), tempHttpResp.end());
 
-							operationStatus = SSLDataToClientWriter::writeDataToClient(client);
-							handleOperationStatus(client, operationStatus);
+							operationStatus = dataToClientWriter(client);
+							operationStatusHandler(client, operationStatus, clientConnectionPollFD);
+							serverConnectionPollFD->events = POLLIN | POLLOUT;
 
-							client.clientConnectionPollFD->events = POLLIN | POLLOUT;
 							client.clearDataFromClient();
 
 						}
 						else 
 						{
-							LogSystem::logMessage("Full " + request.method + " request received", "RECEIVED", std::to_string(client.id));
-
 							RequestURI requestURI = RequestURIParser::parse(request.hostname);
-							if (client.connectionType == ConnectionType::UNDEFINED) {
+							if (client.getConnectionType() == ConnectionType::UNDEFINED) {
 
 								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(requestURI.nonLocalPart);
-								HostConnector::connectToHost(client, ip, port, *this);
-								client.connectionType = ConnectionType::PLAIN_TEXT;
+								auto pollFD = HostConnector::connectToHost(client, ip, port);
+								m_pollfds.push_back(pollFD);
+								client.setConnectionType(ConnectionType::PLAIN_TEXT);
+								clientConnectionPollFD = getPollFD(client.clientSocket);
+								serverConnectionPollFD = getPollFD(client.serverSocket);
 							}
+
+							LogSystem::logMessage("Full " + request.method + " request received", "RECEIVED", std::to_string(client.getID()));
 
 							std::vector<char> requestText = client.getDataFromClient();
 							auto afterMethod = std::find(requestText.begin(), requestText.end(), ' ');
@@ -169,46 +213,47 @@ public:
 
 							client.m_dataFromClient.erase(client.m_dataFromClient.begin(), endOfRequestPosition2 + 4);
 
-							client.serverConnectionPollFD->events = POLLOUT | POLLIN;
+							serverConnectionPollFD->events = POLLOUT | POLLIN;
+							clientConnectionPollFD->events = POLLOUT | POLLIN;
 
 						}
 					}
-
-
 				}
 				
 				
-				if (client.connectionType != ConnectionType::UNDEFINED) {
+				if (client.getConnectionType() != ConnectionType::UNDEFINED) {
 
 					// send data to server
-					if ((client.serverConnectionPollFD->revents & POLLOUT) && client.m_httpRequestFromClient.size() > 0) {
-						DataToServerWriter::writeDataToServer(client);
+					if ((serverConnectionPollFD->revents & POLLOUT) && client.m_httpRequestFromClient.size() > 0) {
+						DataToServerWriter::write(client);
+						serverConnectionPollFD->events = POLLIN | POLLOUT;
 					}
 
 					// receive data from server
-					if (client.serverConnectionPollFD->revents & POLLIN) {
-						DataFromServerReader::readDataFromServer(client);						
+					if (serverConnectionPollFD->revents & POLLIN) {
+						DataFromServerReader::read(client);
+						serverConnectionPollFD->events = POLLOUT | POLLIN;
+						clientConnectionPollFD->events = POLLOUT | POLLIN;					
 					}
 
-					if (client.clientConnectionPollFD->revents & (POLLOUT | POLLIN)) {
+					if (clientConnectionPollFD->revents & (POLLOUT | POLLIN)) {
 
 						// send data to client
 						if (client.m_httpResponseFromServer.size() > 0) {
-							operationStatus = SSLDataToClientWriter::writeDataToClient(client);
-							handleOperationStatus(client, operationStatus);
+							operationStatus = dataToClientWriter(client);
+							operationStatusHandler(client, operationStatus, clientConnectionPollFD);
+							serverConnectionPollFD->events = POLLOUT | POLLIN;
 						}
 					}
 				
 				}
 
-				// zamykanie nieużywanego połączenia
-				// TODO: użyć wartości z ustawień -> teraz timeout po 10s bezczynności
-				auto clientUptime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - client.timestamp);
+				// close timed-out connection
+				auto clientUptime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - client.getCurrentTimestamp());
 				if(clientUptime.count() > 10.0)
 				{
-					// zamykanie połączeń
-					LogSystem::logMessage("Client uptime: " + std::to_string(clientUptime.count()) + "s", "CLOSING", std::to_string(client.id));
-					closeEncryptedClient(client, clientIndex);
+					LogSystem::logMessage("Client uptime: " + std::to_string(clientUptime.count()) + "s", "CLOSING", std::to_string(client.getID()));
+					closeConnection(client, clientIndex);
 					break;
 				}
 
@@ -216,24 +261,14 @@ public:
 		}
 	}
 
-	void handleOperationStatus(Client& client, int operationStatus) {
-		if (operationStatus != 0) {
-			int errors = SSL_get_error(client.ssl, operationStatus);
-			if (errors == SSL_ERROR_WANT_READ) {
-				client.clientConnectionPollFD->events |= POLLIN;
-			}
-			else if (errors == SSL_ERROR_WANT_WRITE) {
-				client.clientConnectionPollFD->events |= POLLOUT;
-			}
-		}
+private: // methods
+
+	std::vector<pollfd>::iterator getPollFD(int socketNumber) {
+		return std::find_if(m_pollfds.begin(), m_pollfds.end(), [&socketNumber](auto& pollFD) {
+			return socketNumber == pollFD.fd;
+		});
 	}
 
-	void setSocketToNonBlocking(int socketToSet)
-	{
-		int flags = fcntl(socketToSet, F_GETFL);
-		int operationStatus = fcntl(socketToSet, F_SETFL, O_NONBLOCK | flags);
-		exitOnError(operationStatus, "fcntl() function failed");
-	}
 
 	void exitOnError(int operationStatus, const std::string& errorMessage)
 	{
@@ -243,93 +278,41 @@ public:
 		}
 	}
 
-	void performPoll(std::vector<pollfd>& pollfds)
+	void performPoll()
 	{
-		int operationStatus = poll(pollfds.data(), pollfds.size(), -1);
+		int operationStatus = poll(m_pollfds.data(), m_pollfds.size(), -1);
 		exitOnError(operationStatus, "poll() function failed");
 	}
 
 	void acceptNewConnection()
 	{
-		static int nextId = 0;
-
-		sockaddr_in addr;
-		uint len = sizeof(addr);
-
-		int clientSocket = accept(m_serverSocket, (sockaddr*)&addr, &len);
-		exitOnError(clientSocket, "accept() function failed");
-		
-		SSL* newSsl = SSL_new(m_ctx);
-		SSL_set_fd(newSsl, clientSocket);
-		SSL_set_accept_state(newSsl);
-		
-		setSocketToNonBlocking(clientSocket);
-
-		Client newClient(newSsl, addr);
-		newClient.clientSocket = clientSocket;
-
-		m_pollfds.push_back({clientSocket, POLLIN | POLLOUT, 0});
-
-		newClient.clientConnectionPollFD = &(m_pollfds.back());
-		newClient.serverConnectionPollFD = nullptr;
-		newClient.id = nextId;
-		newClient.timestamp = std::chrono::high_resolution_clock::now();
-		nextId++;
-
-		m_clients.push_back(newClient);
-
-		std::cout << " + New connection accepted + " << std::endl;
+		auto[client, pollFD] = clientAcceptor(m_serverSocket, m_ctx);
+		m_pollfds.push_back(pollFD);
+		m_clients.push_back(client);
+		LogSystem::logMessage("New connection accepted", "ACCEPTING", std::to_string(client.getID()));
 	}
 
-	void closeEncryptedClient(Client& client, int clientIndex)
+	void closeConnection(Client& client, int clientIndex)
 	{
-		if(client.clientConnectionPollFD != nullptr)
-		{
-			int clientFd = client.clientConnectionPollFD->fd;
-
-			for(long unsigned int pollFdIndex = 0; pollFdIndex < m_pollfds.size(); pollFdIndex++)
-			{
-				auto& pollFd = m_pollfds[pollFdIndex];
-				if(pollFd.fd == clientFd)
-				{
-					close(pollFd.fd);
-					SSL_free(client.ssl);
-					m_pollfds.erase(m_pollfds.begin() + pollFdIndex);
-					break;
-				}
-			}
-		}
-
-		if(client.serverConnectionPollFD != nullptr)
-		{
-			int serverFd = client.serverConnectionPollFD->fd;
-
-			for(long unsigned int pollFdIndex = 0; pollFdIndex < m_pollfds.size(); pollFdIndex++)
-			{
-				auto& pollFd = m_pollfds[pollFdIndex];
-				if(pollFd.fd == serverFd)
-				{
-					close(pollFd.fd);
-					m_pollfds.erase(m_pollfds.begin() + pollFdIndex);
-					break;
-				}
-			}
-		}
-
+		ClientDisconnector::disconnect(client, m_pollfds);
+		HostDisconnector::disconnect(client, m_pollfds);
 		m_clients.erase(m_clients.begin() + clientIndex);
 	}
 
-// TODO: make private
-public:
+private: // state
 
 	int m_serverSocket;
 	sockaddr_in m_serverAddr;
 	SSL_CTX* m_ctx;
 
 	std::vector<pollfd> m_pollfds;
-
 	std::vector<Client> m_clients;
 
+	std::function<int(Client&)> unencryptedDataFromClientReader;
+	std::function<int(Client&)> encryptedDataFromClientReader;
+	std::function<int(Client&)> dataToClientWriter;
+	std::function<void(Client&, int, std::vector<pollfd>::iterator)> operationStatusHandler;
+	std::function<std::tuple<Client, pollfd>(int, SSL_CTX*)> clientAcceptor;
 };
 
 
