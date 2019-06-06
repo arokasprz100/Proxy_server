@@ -40,18 +40,17 @@ std::string& PSiCAlgorithm::removeLeadingZeros(std::string& input)
 
 void PSiCAlgorithm::lookForSequences(std::vector<char>& input)
 {
+	std::string found = "";
+	int firstIndex = 0;
 	for(unsigned int i = 0; i < input.size(); i++)
 	{
-		int firstIndex = 0;
 		char& curr = input[i];
-		std::string found = "";
 		
 		if(curr >= '0' && curr <= '9')
 		{
 			// beginning of the sequence to swap
 			if(found.size() == 0)
 				firstIndex = i;
-
 			found += curr;
 
 			if(found.size() == 26 && PSiCAlgorithm::checkSequence(found))
