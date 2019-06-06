@@ -1,7 +1,0 @@
-{
-    "connectionData26Numbers": "11111111111111111111111111",
-    "certificateFilePath": ".\/certs\/domena.crt",
-    "privateKeyFilePath": ".\/certs\/domena.key",
-    "maxNumberOfConnections": "101",
-    "timeoutLimit": "10"
-}
