@@ -6,6 +6,7 @@
 int main(int argc, char** argv)
 {
 	signal(SIGINT, sigintHandler); 
+	signal(SIGPIPE, SIG_IGN);
 	InputSettings inputSettings = ArgumentParser::parse(argc, argv);
 	LogSystem::initialize(inputSettings.getLogType());
 	ServerSettings serverSettings;

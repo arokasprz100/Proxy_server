@@ -31,7 +31,7 @@
 *.out
 *.app
 
-# Stuff Dominik is adding that absolutely should not be in the repository
+# CMake generated files
 Makefile
 CMakeCache.txt
 CMakeFiles/

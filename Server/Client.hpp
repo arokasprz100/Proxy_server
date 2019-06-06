@@ -41,7 +41,7 @@ public:
 		m_dataFromClient.insert(m_dataFromClient.end(), dataToAdd.begin(), dataToAdd.end());
 	}
 
-	const std::vector<char> getDataFromClient() const {
+	std::vector<char>& getDataFromClient() {
 		return m_dataFromClient;
 	}
 

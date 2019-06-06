@@ -16,14 +16,14 @@
 #include "Initializers/SSLInitializer.hpp"
 #include "Initializers/ServerInitializer.hpp"
 
-#include "IPAndPortExtractor.hpp"
+#include "HttpRequestParser/IPAndPortExtractor.hpp"
 #include "HostConnector.hpp"
 
 #include "Client.hpp"
 #include "ConnectionType.hpp"
 
-#include "RequestURIParser.hpp"
-#include "HttpRequestParserDummy.hpp"
+#include "HttpRequestParser/RequestURIParser.hpp"
+#include "HttpRequestParser/HttpRequestParser.hpp"
 
 #include "LogSystem/LogSystem.hpp"
 
@@ -41,6 +41,8 @@
 #include "DataWriters/DataToServerWriter.hpp"
 
 #include "ServerSettings/ServerSettings.hpp"
+
+#include "HttpResponseFactory.hpp"
 
 /*
 TODO: integrate http request parser (and protocol and size constraints)
@@ -142,22 +144,24 @@ public:
 				{
 
 					// if full http request present
-					const char *crlf2 = "\r\n\r\n";
-					std::vector<char> dataFromClient = client.getDataFromClient();
+					const char *crlf = "\r\n\r\n";
+					std::vector<char>& dataFromClient = client.getDataFromClient();
 
-					auto endOfRequestPosition = std::search(dataFromClient.begin(), dataFromClient.end(), crlf2, crlf2 + strlen(crlf2));
+					auto endOfRequestPosition = std::search(dataFromClient.begin(), dataFromClient.end(), crlf, crlf + strlen(crlf));
 
+					// if full http request present
 					if (endOfRequestPosition != dataFromClient.end()) 
 					{
-						HttpRequest request = HttpRequestParserDummy::parse(
-							std::string(dataFromClient.begin(), 
-								dataFromClient.end()));
+
+						HttpRequest* request = HttpRequestParser::parseHttpRequest(dataFromClient);
+						std::string resourcePath = request->getResourcePath();
 
 						// if connect method received, make connection to server
-						if (request.method == "CONNECT") {
+						if (request->getHttpMethod() == Method::CONNECT) {
 
-							if (client.getConnectionType() == ConnectionType::UNDEFINED) {
-								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(request.hostname);
+							if (client.getConnectionType() == ConnectionType::UNDEFINED) 
+							{
+								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(resourcePath);
 								auto pollFD = HostConnector::connectToHost(client, ip, port);
 								m_pollfds.push_back(pollFD);
 								client.setConnectionType(ConnectionType::ENCRYPTED);
@@ -166,26 +170,25 @@ public:
 							}
 
 							LogSystem::logMessage("Full CONNECT request received", "RECEIVED", std::to_string(client.getID()));
+							std::vector<char> parsedRequest = request->getFullRequest();
 
-							// set 200 confirming that it worked
-							std::string tempHttpResp = std::string("HTTP/1.1 200 Connection Established\r\n") + 
-								"Reason: Connection Established\r\n" + 
-								"Proxy-Connection: Keep-Alive\r\n" + 
-								"Connection: Keep-Alive\r\n\r\n";
-							client.m_httpResponseFromServer = std::vector<char>(tempHttpResp.begin(), tempHttpResp.end());
+							if (request->getHeadersSize() > 8000) {
+								client.m_httpResponseFromServer = HttpResponseFactory::get413Response();
+							} else {
+								client.m_httpResponseFromServer = HttpResponseFactory::get200Response();
 
-							operationStatus = dataToClientWriter(client);
-							operationStatusHandler(client, operationStatus, clientConnectionPollFD);
-							serverConnectionPollFD->events = POLLIN | POLLOUT;
+								operationStatus = dataToClientWriter(client);
+								operationStatusHandler(client, operationStatus, clientConnectionPollFD);
+								serverConnectionPollFD->events = POLLIN | POLLOUT;
+							}
 
-							client.clearDataFromClient();
-
+							dataFromClient.erase(dataFromClient.begin(), dataFromClient.begin() + parsedRequest.size());\
 						}
 						else 
 						{
-							RequestURI requestURI = RequestURIParser::parse(request.hostname);
-							if (client.getConnectionType() == ConnectionType::UNDEFINED) {
-
+							RequestURI requestURI = RequestURIParser::parse(resourcePath);
+							if (client.getConnectionType() == ConnectionType::UNDEFINED) 
+							{
 								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(requestURI.nonLocalPart);
 								auto pollFD = HostConnector::connectToHost(client, ip, port);
 								m_pollfds.push_back(pollFD);
@@ -194,30 +197,33 @@ public:
 								serverConnectionPollFD = getPollFD(client.serverSocket);
 							}
 
-							LogSystem::logMessage("Full " + request.method + " request received", "RECEIVED", std::to_string(client.getID()));
+							// if request complete
+							if (request->isRequestComplete()) {
 
-							std::vector<char> requestText = client.getDataFromClient();
-							auto afterMethod = std::find(requestText.begin(), requestText.end(), ' ');
+								std::vector<char> parsedRequest = request->getFullRequest();
+								int originalRequestSize = parsedRequest.size();
 
-							const char* nonLocal = requestURI.nonLocalPart.c_str();
-							auto afterNonLocal = std::search(requestText.begin(), 
-								requestText.end(), 
-								nonLocal, nonLocal + strlen(nonLocal)) + strlen(nonLocal);
+								LogSystem::logMessage("Full " + request->getHttpMethodAsString() +" request received", "RECEIVED", std::to_string(client.getID()));
 
-							requestText.erase(afterMethod + 1, afterNonLocal);
+								if (request->getHeadersSize() > 8000) {
+									client.m_httpResponseFromServer = HttpResponseFactory::get413Response();
+								} 
+								else {
+									request->eraseNonLocalPartOfResourcePath();
+									parsedRequest = request->getFullRequest();
+									client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(),
+										parsedRequest.begin(), parsedRequest.end());
+								}
 
-							client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(),
-								requestText.begin(), requestText.end());
+								dataFromClient.erase(dataFromClient.begin(), dataFromClient.begin() + originalRequestSize);
 
-							auto endOfRequestPosition2 = std::search(client.m_dataFromClient.begin(), client.m_dataFromClient.end(), 
-								crlf2, crlf2 + strlen(crlf2));
-
-							client.m_dataFromClient.erase(client.m_dataFromClient.begin(), endOfRequestPosition2 + 4);
-
-							serverConnectionPollFD->events = POLLOUT | POLLIN;
-							clientConnectionPollFD->events = POLLOUT | POLLIN;
+								serverConnectionPollFD->events = POLLOUT | POLLIN;
+								clientConnectionPollFD->events = POLLOUT | POLLIN;
+							}
 
 						}
+
+						delete request;
 					}
 				}
 				
@@ -251,7 +257,7 @@ public:
 
 				// close timed-out connection
 				auto clientUptime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - client.getCurrentTimestamp());
-				if(clientUptime.count() > 10.0)
+				if(clientUptime.count() > serverSettings.getTimeoutLimit())
 				{
 					LogSystem::logMessage("Client uptime: " + std::to_string(clientUptime.count()) + "s", "CLOSING", std::to_string(client.getID()));
 					closeConnection(client, clientIndex);
