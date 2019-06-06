@@ -45,7 +45,7 @@
 #include "HttpResponseFactory.hpp"
 
 /*
-TODO: integrate http request parser (and protocol and size constraints)
+TODO: add protocol constraints
 TODO: integrate algorithm
 TODO: refactor
 TODO: write doxs
