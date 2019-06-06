@@ -1,6 +1,6 @@
-#include "HostConnector.hpp"
-#include "Server.hpp"
-#include "LogSystem/LogSystem.hpp"
+#include "../include/HostConnector.hpp"
+#include "../include/Server.hpp"
+#include "../include/LogSystem/LogSystem.hpp"
 
 pollfd HostConnector::connectToHost(Client& client, const std::string& hostIp, int port) {
 

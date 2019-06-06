@@ -1,5 +1,5 @@
-#include "ServerOwner.hpp"
-#include "LogSystem/LogSystem.hpp"
+#include "../include/ServerOwner.hpp"
+#include "../include/LogSystem/LogSystem.hpp"
 
 Server* ServerOwner::server = nullptr;
 

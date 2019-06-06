@@ -1,7 +1,7 @@
-#include "ServerOwner.hpp"
-#include "LogSystem/LogSystem.hpp"
-#include "ArgumentParser/ArgumentParser.hpp"
-#include "ServerSettings/SettingsEditor.hpp"
+#include "../include/ServerOwner.hpp"
+#include "../include/LogSystem/LogSystem.hpp"
+#include "../include/ArgumentParser/ArgumentParser.hpp"
+#include "../include/ServerSettings/SettingsEditor.hpp"
 
 int main(int argc, char** argv)
 {
@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 	InputSettings inputSettings = ArgumentParser::parse(argc, argv);
 	LogSystem::initialize(inputSettings.getLogType());
 	ServerSettings serverSettings;
-	serverSettings.readJson("ServerSettings/http_connection_data_example.json");
+	serverSettings.readJson("./http_connection_data_example.json");
 	if (inputSettings.getIfShouldRunMenu()) {
 		SettingsEditor::displayMenu(serverSettings);
 	}

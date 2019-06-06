@@ -1,7 +1,7 @@
-#include "DataFromClientReaderChooser.hpp"
+#include "../../include/DataReaders/DataFromClientReaderChooser.hpp"
 
-#include "DataFromClientReader.hpp"
-#include "SSLDataFromClientReader.hpp"
+#include "../../include/DataReaders/DataFromClientReader.hpp"
+#include "../../include/DataReaders/SSLDataFromClientReader.hpp"
 
 std::map<ClientConnectionType, std::function<int(Client&)>> 
 	DataFromClientReaderChooser::UNENCRYPTED_DATA_FROM_CLIENT_READERS_BY_CONNECTION_TYPE = {

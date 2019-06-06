@@ -1,7 +1,7 @@
-#include "ClientAcceptorChooser.hpp"
+#include "../../include/ClientAcceptors/ClientAcceptorChooser.hpp"
 
-#include "SSLClientConnectionAcceptor.hpp"
-#include "UnencryptedClientConnectionAcceptor.hpp"
+#include "../../include/ClientAcceptors/SSLClientConnectionAcceptor.hpp"
+#include "../../include/ClientAcceptors/UnencryptedClientConnectionAcceptor.hpp"
 
 std::map<ClientConnectionType, Acceptor> 
 	ClientAcceptorChooser::CONNECTION_ACCEPTORS_BY_CONNECTION_TYPES = {

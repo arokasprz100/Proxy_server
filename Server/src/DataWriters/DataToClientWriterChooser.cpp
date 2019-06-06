@@ -1,7 +1,7 @@
-#include "DataToClientWriterChooser.hpp"
+#include "../../include/DataWriters/DataToClientWriterChooser.hpp"
 
-#include "DataToClientWriter.hpp"
-#include "SSLDataToClientWriter.hpp"
+#include "../../include/DataWriters/DataToClientWriter.hpp"
+#include "../../include/DataWriters/SSLDataToClientWriter.hpp"
 
 std::map<ClientConnectionType, std::function<int(Client&)>> 
 	DataToClientWriterChooser::DATA_TO_CLIENT_WRITERS_BY_CONNECTION_TYPE = {

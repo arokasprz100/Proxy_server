@@ -1,4 +1,4 @@
-#include "SettingsEditor.hpp"
+#include "../../include/ServerSettings/SettingsEditor.hpp"
 
 std::map<int, void(*)(ServerSettings&)> SettingsEditor::OPERATIONS_BY_USER_INPUT = 
 {

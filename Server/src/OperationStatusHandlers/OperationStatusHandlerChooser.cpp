@@ -1,7 +1,7 @@
-#include "OperationStatusHandlerChooser.hpp"
+#include "../../include/OperationStatusHandlers/OperationStatusHandlerChooser.hpp"
 
-#include "SSLOperationStatusHandler.hpp"
-#include "TCPOperationStatusHandler.hpp"
+#include "../../include/OperationStatusHandlers/SSLOperationStatusHandler.hpp"
+#include "../../include/OperationStatusHandlers/TCPOperationStatusHandler.hpp"
 
 std::map<ClientConnectionType, std::function<void(Client&, int, std::vector<pollfd>::iterator)>> 
 	OperationStatusHandlerChooser::OPERATION_STATUS_HANDLERS_BY_CLIENT_CONNECTION_TYPE = 

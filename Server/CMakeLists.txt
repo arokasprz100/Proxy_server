@@ -7,21 +7,10 @@ set(CMAKE_SHARED_LINKER_FLAGS "-lssl -lcrypto")
 
 
 file(GLOB Server_src
-    "*.hpp"
-    "*.cpp"
-    "DataReaders/*.hpp"
-    "DataReaders/*.cpp"
-    "DataWriters/*.hpp"
-    "DataWriters/*.cpp"
-    "LogSystem/*.hpp"
-    "LogSystem/*.cpp"
-    "OperationStatusHandlers/*.hpp"
-    "OperationStatusHandlers/*.cpp"
-    "ServerSettings/*.hpp"
-    "ServerSettings/*.cpp"
-    "ClientAcceptors/*.hpp"
-    "ClientAcceptors/*.cpp"
-    "ArgumentParser/*.hpp")
+    "include/*/*.hpp"
+    "include/*.hpp"
+    "src/*/*.cpp"
+    "src/*.cpp")
 
 add_executable(Server
 	${Server_src}
