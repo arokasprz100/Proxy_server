@@ -1,3 +1,8 @@
+/**
+*	@file IPAndPortExtractor.hpp
+*	@brief This file contains the definition of a class that implements extracting IP and port number from received HTTP request.
+*/
+
 #ifndef IPAndPortExtractor_hpp
 #define IPAndPortExtractor_hpp
 
@@ -9,10 +14,17 @@
 #include <string>
 #include <tuple>
 
+/**
+*	@class IPAndPortExtractor
+*/
 class IPAndPortExtractor
 {
 public:
-
+	/**
+	*	This member function extracts IP address and port number from URI
+	*	@param hostname A reference to a std::string object containing destination server's address/URI and/or port.
+	*	@returns An std::tuple containing IP adress and the port number. 
+	*/
 	static std::tuple<std::string, int> extractIPAddressAndPortNumberFromURI(const std::string& hostname) {
 
 		int portNumber = 80;

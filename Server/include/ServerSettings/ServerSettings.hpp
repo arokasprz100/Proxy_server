@@ -1,3 +1,8 @@
+/**
+*	@file ServerSettings.hpp
+*	@brief
+*/
+
 #ifndef ServerSettings_hpp
 #define ServerSettings_hpp
 
@@ -12,18 +17,30 @@
 #include <boost/property_tree/json_parser.hpp>
 
 using namespace boost::property_tree;
+
+/**
+*	@class ServerSettings
+*/
 class ServerSettings final 
 {
 public:
-
+	/**
+	*	
+	*/
 	ServerSettings() { 
 		setCurrentTreeToDefault(); 
 	}
 
+	/**
+	*	
+	*/
 	~ServerSettings() {
 		deleteCurrentTree();
 	}
 
+	/**
+	*	
+	*/
 	void deleteCurrentTree() {
 		if (currentTree != nullptr) {
 			delete currentTree;
@@ -31,11 +48,17 @@ public:
 		}
 	}
 
+	/**
+	*	
+	*/
 	void createCurrentTree() {
 		if (currentTree != nullptr) deleteCurrentTree();
 		currentTree = new ptree();
 	}
 
+	/**
+	*	
+	*/
 	void setCurrentTreeToDefault() {
 		createCurrentTree();
 		for (auto const& i: treeDefaultvalues) {
@@ -43,6 +66,10 @@ public:
 		}
 	}
 
+	/**
+	*	
+	*	@returns
+	*/
 	bool validateJsonFields() {
 		if (currentTree != nullptr) {
 			std::string connectionData26Numbers = currentTree->get<std::string>("connectionData26Numbers");
@@ -107,12 +134,20 @@ public:
 		return true;
 	}
 
+	/**
+	*
+	*	@param jsonPath
+	*/
 	void readJson(std::string jsonPath) {
 		createCurrentTree();
 		read_json(jsonPath, *currentTree);
 		validateJsonFields();
 	}
 
+	/**
+	*
+	*	@param jsonPath
+	*/
 	void writeJson(const std::string& jsonPath) {
 		if (currentTree == nullptr) createCurrentTree();
 		write_json(jsonPath, *currentTree);
@@ -124,7 +159,10 @@ public:
 		write_json(std::cout, *currentTree);
 	}
 
-
+	/**
+	*	
+	*	@returns 
+	*/
 	std::string getConnectionData26Numbers() const {
 		if (currentTree != nullptr) {
 			return currentTree->get<std::string>("connectionData26Numbers");
@@ -132,6 +170,10 @@ public:
 		else return nullptr;
 	}
 
+	/**
+	*	
+	*	@returns
+	*/
 	std::string getCertificateFilePath() const {
 		if (currentTree != nullptr) {
 			return currentTree->get<std::string>("certificateFilePath");
@@ -139,6 +181,10 @@ public:
 		else return nullptr;
 	}
 
+	/**
+	*	
+	*	@returns
+	*/
 	std::string getPrivateKeyFilePath() const {
 		if (currentTree != nullptr) {
 			return currentTree->get<std::string>("privateKeyFilePath");
@@ -146,6 +192,10 @@ public:
 		else return nullptr;
 	}
 
+	/**
+	*	
+	*	@returns
+	*/
 	unsigned getMaxNumberOfConnections() const {
 		if (currentTree != nullptr) {
 			std::string maxNumberOfConnections = currentTree->get<std::string>("maxNumberOfConnections");
@@ -157,6 +207,10 @@ public:
 		else return 0;
 	}
 
+	/**
+	*	
+	*	@returns
+	*/
 	unsigned getTimeoutLimit() const {
 		if (currentTree != nullptr) {
 			std::string timeoutLimit = currentTree->get<std::string>("timeoutLimit");
@@ -170,30 +224,50 @@ public:
 
 	// Setters for internal server use in order to modify
 	// json values accordingly.
+	/**
+	*
+	*	@param connectionData26Numbers
+	*/
 	void setConnectionData26Numbers(const std::string& connectionData26Numbers) {
 		if (currentTree != nullptr) {
 			currentTree->put("connectionData26Numbers", connectionData26Numbers);
 		}
 	}
 
+	/**
+	*
+	*	@param certificateFilePath
+	*/
 	void setCertificateFilePath(const std::string& certificateFilePath) {
 		if (currentTree != nullptr) {
 			currentTree->put("certificateFilePath", certificateFilePath);
 		}
 	}
 
+	/**
+	*
+	*	@param privateKeyFilePath
+	*/
 	void setPrivateKeyFilePath(const std::string& privateKeyFilePath) {
 		if (currentTree != nullptr) {
 			currentTree->put("privateKeyFilePath", privateKeyFilePath);
 		}
 	}
 
+	/**
+	*
+	*	@param maxNumberOfConnections
+	*/
 	void setMaxNumberOfConnections(const std::string& maxNumberOfConnections) {
 		if (currentTree != nullptr) {
 			currentTree->put("maxNumberOfConnections", maxNumberOfConnections);
 		}
 	}
 
+	/**
+	*
+	*	@param timeoutLimit
+	*/
 	void setTimeoutLimit(const std::string& timeoutLimit) {
 		if (currentTree != nullptr) {
 			currentTree->put("timeoutLimit", timeoutLimit);

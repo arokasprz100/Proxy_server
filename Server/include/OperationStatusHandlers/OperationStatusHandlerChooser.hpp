@@ -1,3 +1,8 @@
+/**
+*	@file OperationStatusHandlerChooser.hpp
+*	@brief
+*/
+
 #ifndef OperationStatusHandlerChooser_hpp
 #define OperationStatusHandlerChooser_hpp
 
@@ -7,10 +12,18 @@
 #include "../Client.hpp"
 #include "../ClientConnectionType.hpp"
 
+/**
+*	@class OperationStatusHandlerChooser
+*/
 class OperationStatusHandlerChooser final 
 {
 public:
-
+	/**
+	*
+	*	@param clientConnectionType
+	*	@see ClientConnectionType
+	*	@returns 
+	*/
 	static auto chooseOperationStatusHandler(ClientConnectionType clientConnectionType) {
 		return OPERATION_STATUS_HANDLERS_BY_CLIENT_CONNECTION_TYPE[clientConnectionType];
 	}

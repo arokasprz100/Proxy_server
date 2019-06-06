@@ -1,3 +1,8 @@
+/**
+*	@file RequestURIParser.hpp
+*	@brief 
+*/
+
 #ifndef RequestURIParser_hpp
 #define RequestURIParser_hpp
 
@@ -9,7 +14,10 @@ struct RequestURI {
 class RequestURIParser
 {
 public:
-
+	/**
+	*	
+	*	@param requestURI
+	*/
 	static RequestURI parse(const std::string& requestURI) {
 		std::string nonLocalURIPart = extractNonLocalURIPart(requestURI);
 		// std::cout << "[NON_LOCAL] = " << nonLocalURIPart << std::endl;

@@ -1,3 +1,8 @@
+/**
+*	@file SSLClientConnectionAcceptor.hpp
+*	@brief 
+*/
+
 #ifndef SSLClientConnectionAcceptor_hpp
 #define SSLClientConnectionAcceptor_hpp
 
@@ -10,10 +15,17 @@
 
 #include <string>
 
+/**
+*	@class SSLClientConnectionAcceptor
+*/
 class SSLClientConnectionAcceptor final
 {
 public:
-
+	/**
+	*	
+	*	@param serverSocket
+	*	@param sslContext
+	*/
 	static std::tuple<Client, pollfd> acceptConnection(int serverSocket, SSL_CTX* sslContext) {
 
 		sockaddr_in addr;

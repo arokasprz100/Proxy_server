@@ -1,3 +1,8 @@
+/**
+*	@file LogSystem.hpp
+*	@brief 
+*/
+
 #ifndef LogSystem_hpp
 #define LogSystem_hpp
 
@@ -11,14 +16,23 @@
 #include <type_traits>
 #include <string>
 
-
+/**
+*	@typedef AllArgsAreStrings
+*/
 template<typename... Types>
 using AllArgsAreStrings = typename std::conjunction<std::is_convertible<Types, std::string>...>::type;
 
+/**
+*	@class LogSystem
+*/
 class LogSystem
 {
 public:
-
+	/**
+	*	
+	*	@param logType
+	*	@see LogType
+	*/
 	static void initialize(LogType logType) {
 		switch(logType) {
 			case LogType::CONSOLE:
@@ -33,6 +47,11 @@ public:
 
 	}
 
+	/**
+	*	
+	*	@param message
+	*	@param tags
+	*/
 	template<typename... Types>
 	static void logMessage(const std::string& message, Types ... tags) {
 		if (!isInitialized) {

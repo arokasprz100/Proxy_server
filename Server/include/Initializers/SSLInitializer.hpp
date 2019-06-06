@@ -1,13 +1,26 @@
+/**
+*	@file SSLInitializer.hpp
+*	@brief 
+*/
+
 #ifndef SSLInitializer_hpp
 #define SSLInitializer_hpp
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
+/**
+*	@class SSLInitializer
+*/
 class SSLInitializer final
 {
 public:
-
+	/**
+	*
+	*	@param certificateFilePath
+	* 	@param privateKeyFilePath
+	*	@returns
+	*/
 	static SSL_CTX* initialize(const std::string& certificateFilePath, const std::string& privateKeyFilePath) {
 		initOpenssl();
 		SSL_CTX* ctx = prepareContext();

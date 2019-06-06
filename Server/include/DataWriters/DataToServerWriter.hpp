@@ -1,12 +1,25 @@
+/**
+*	@file DataToServerWriter.hpp
+*	@brief 
+*/
+
 #ifndef DataToServerWriter_hpp
 #define DataToServerWriter_hpp
 
 #include "../LogSystem/LogSystem.hpp"
 
+/**
+*	@class DataToServerWriter
+*/
 class DataToServerWriter
 {
 public:
-
+	/**
+	*	
+	*	@param client
+	*	@see Client
+	*	@returns 
+	*/
 	static int write(Client& client) {
 
 		int operationStatus = send(client.serverSocket, 

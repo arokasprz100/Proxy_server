@@ -1,3 +1,8 @@
+/**
+*	@file ServerInitializer.hpp
+*	@brief 
+*/
+
 #ifndef ServerInitializer_hpp
 #define ServerInitializer_hpp
 
@@ -12,10 +17,18 @@
 #include <fcntl.h>
 #include <poll.h>
 
+/**
+*	@class ServerInitializer
+*/
 class ServerInitializer final 
 {
 public:
-
+	/**
+	*	
+	*	@param port
+	*	@param pollFDs
+	*	@returns
+	*/
 	static std::tuple<int, sockaddr_in> initialize(int port, std::vector<pollfd>& pollFDs) 
 	{
 		sockaddr_in serverAddr = prepareServerAddr(port);

@@ -1,10 +1,23 @@
-#ifndef SLLDataFromClientReader_hpp
+/**
+*	@file SSLDataFromClientReader.hpp
+*	@brief 
+*/
+
+#ifndef SSLDataFromClientReader_hpp
 #define SSLDataFromClientReader_hpp
 
+/**
+*	@class SSLDataFromClientReader
+*/
 class SSLDataFromClientReader
 {
 public:
-
+	/**
+	*	
+	*	@param client
+	*	@see Client
+	*	@returns 
+	*/
 	static int readUnencryptedData(Client& client) {
 		int operationStatus = 0;
 		do {
@@ -20,6 +33,11 @@ public:
 		return operationStatus;
 	}
 
+	/**
+	*	
+	*	@param client
+	*	@see Client
+	*/
 	static int readEncryptedData(Client& client) {
 		int operationStatus = 0;
 		do {

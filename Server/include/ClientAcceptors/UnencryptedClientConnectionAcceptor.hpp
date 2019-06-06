@@ -1,3 +1,8 @@
+/**
+*	@file UnencryptedClientConnectionAcceptor.hpp
+*	@brief 
+*/
+
 #ifndef UnencryptedClientConnectionAcceptor_hpp
 #define UnencryptedClientConnectionAcceptor_hpp
 
@@ -10,10 +15,17 @@
 
 #include <string>
 
+/**
+*	@class UnencryptedClientConnectionAcceptor
+*/
 class UnencryptedClientConnectionAcceptor final
 {
 public:
-
+	/**
+	*	
+	*	@param serverSocket
+	*	@param sslContext
+	*/
 	static std::tuple<Client, pollfd> acceptConnection(int serverSocket, SSL_CTX* sslContext) {
 		(void)sslContext; // disables warning
 

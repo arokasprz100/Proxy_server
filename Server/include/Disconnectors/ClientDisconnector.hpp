@@ -1,10 +1,24 @@
+/**
+*	@file ClientDisconnector.hpp
+*	@brief 
+*/
+
+
 #ifndef ClientDisconnector_hpp
 #define ClientDisconnector_hpp
 
-class ClientDisconnector
+/**
+*	@class ClientDisconnector
+*/
+class ClientDisconnector final
 {
 public:
-
+	/**
+	*	
+	*	@param client
+	*	@see Client
+	*	@param pollFDs
+	*/
 	static void disconnect(Client& client, std::vector<pollfd>& pollFDs) {
 
 		if (client.ssl) {

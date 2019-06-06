@@ -1,3 +1,8 @@
+/**
+*	@file SettingsEditor.hpp
+*	@brief
+*/
+
 #ifndef SettingsEditor_hpp
 #define SettingsEditor_hpp
 
@@ -8,10 +13,17 @@
 
 #include "ServerSettings.hpp"
 
+/**
+*	@class SettingsEditor
+*/
 class SettingsEditor final
 {
 public:
-
+	/**
+	*
+	*	@param serverSettings
+	*	@see ServerSettings
+	*/
 	static void displayMenu(ServerSettings& serverSettings);
 
 private:
