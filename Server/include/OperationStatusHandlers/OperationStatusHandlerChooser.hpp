@@ -1,6 +1,6 @@
 /**
 *	@file OperationStatusHandlerChooser.hpp
-*	@brief
+*	@brief This file contains the definition of a function that picks connection handler based on the client connection type.
 */
 
 #ifndef OperationStatusHandlerChooser_hpp
@@ -19,10 +19,10 @@ class OperationStatusHandlerChooser final
 {
 public:
 	/**
-	*
-	*	@param clientConnectionType
-	*	@see ClientConnectionType
-	*	@returns 
+	*	This member function implements picking appropriate connection handler for the client to proxy connection.
+	*	@param clientConnectionType Value descirbing the type of client to proxy connection.
+	*	@see ClientConnectionType 
+	*	@returns Appropriate std::function object containing the handler to the given connection type.
 	*/
 	static auto chooseOperationStatusHandler(ClientConnectionType clientConnectionType) {
 		return OPERATION_STATUS_HANDLERS_BY_CLIENT_CONNECTION_TYPE[clientConnectionType];

@@ -1,6 +1,6 @@
 /**
 *	@file SettingsEditor.hpp
-*	@brief
+*	@brief This file contains the interactive command line session handler.
 */
 
 #ifndef SettingsEditor_hpp
@@ -20,8 +20,8 @@ class SettingsEditor final
 {
 public:
 	/**
-	*
-	*	@param serverSettings
+	*	This function prints menu in the command line and handles user inputs.
+	*	@param serverSettings A reference to a ServerSettings object containing information read from the json settings file.
 	*	@see ServerSettings
 	*/
 	static void displayMenu(ServerSettings& serverSettings);

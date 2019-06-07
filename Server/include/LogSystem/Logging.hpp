@@ -1,6 +1,6 @@
 /**
 *	@file Logging.hpp
-*	@brief 
+*	@brief This file contains the definition of the base class responsible for command line output.
 */
 
 #ifndef Logging_hpp
@@ -15,9 +15,11 @@ class Logging
 {
 public:
 	/**
-	*	
-	*	@param tags
-	*	@param message
+	*	This purely virtual member function provides interface of different logging types that may be selected.
+	*	@see ConsoleLog
+	*	@see SilentLog
+	*	@param tags Variable amount of highlighted values inside brackets '[' and ']'.
+	*	@param message Message attached to the associated tags.
 	*/
 	virtual void logMessage(const std::string& tags, const std::string& message) = 0;
 };

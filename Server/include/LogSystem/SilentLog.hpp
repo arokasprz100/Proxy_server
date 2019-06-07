@@ -1,6 +1,6 @@
 /**
 *	@file SilentLog.hpp
-*	@brief
+*	@brief This file contains the definition of derivative class ConsoleLog that doesnt print log messages.
 */
 
 #ifndef SilentLog_hpp
@@ -15,9 +15,10 @@ class SilentLog final : public Logging
 {
 public:
 	/**
-	*
-	*	@param tags
-	*	@param message
+	*	This function implements interface described in the Logging class. Its calls dont produce output to std::out.
+	*	@see Logging 
+	*	@param tags Variable amount of highlighted values inside brackets '[' and ']'.
+	*	@param message Message attached to the associated tags.
 	*/
 	void logMessage(const std::string& tags, const std::string& message) {
 		message + tags;

@@ -1,6 +1,6 @@
 /**
 *	@file LogSystem.hpp
-*	@brief 
+*	@brief This file contains the definition of the implementation of log messages in the program.
 */
 
 #ifndef LogSystem_hpp
@@ -17,7 +17,7 @@
 #include <string>
 
 /**
-*	@typedef AllArgsAreStrings
+*	@typedef AllArgsAreStrings An alias for checking whether all parameters in a parameter pack are os type std::string.
 */
 template<typename... Types>
 using AllArgsAreStrings = typename std::conjunction<std::is_convertible<Types, std::string>...>::type;
@@ -29,8 +29,8 @@ class LogSystem
 {
 public:
 	/**
-	*	
-	*	@param logType
+	*	This function sets whether the logging functions will produce output to std::out or not.
+	*	@param logType Desrcribes the chosen type of output.
 	*	@see LogType
 	*/
 	static void initialize(LogType logType) {
@@ -48,9 +48,10 @@ public:
 	}
 
 	/**
-	*	
-	*	@param message
-	*	@param tags
+	*	This function takes variable amount of arguments and calls appropriate logging function depending of the type that was picked in program's options.
+	*	@see ArgumentParser	
+	*	@param message A reference to a string object containing the message attached to the tags.
+	*	@param tags	A variable amount of string object containing the values to be highlighted. The brackets are added in this function.
 	*/
 	template<typename... Types>
 	static void logMessage(const std::string& message, Types ... tags) {
