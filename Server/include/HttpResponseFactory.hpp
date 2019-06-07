@@ -1,3 +1,8 @@
+/**
+*	@file HostConnector.hpp
+*	@brief This file contains the definition of a class that implements discerning of received HTTP requests and returning approriate set of headers given the request's code.
+*/
+
 #ifndef HttpResponseFactory_hpp
 #define HttpResponseFactory_hpp
 
@@ -5,11 +10,17 @@
 #include <vector>
 #include <string>
 #include <map>
-
+/**
+*	@class HttpResponseFactory
+*/
 class HttpResponseFactory final 
 {
 public:
-
+	/**
+	*	This function returns the approriate header for a given HTTP code.
+	*	@param code A reference to a string containing the 3 character code.
+	*	@returns Header responding to the code.
+	*/
 	static std::vector<char> getResponseByCode(const std::string& code);
 
 private:

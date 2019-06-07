@@ -1,6 +1,6 @@
 /**
 *	@file ServerOwner.hpp
-*	@brief 
+*	@brief This file contains the definition of functions responsible for launching, stopping as well as handling of signals in this program.
 */
 
 #ifndef ServerOwner_hpp
@@ -11,14 +11,19 @@
 #include "ServerSettings/ServerSettings.hpp"
 #include <signal.h>
 
+/**
+*	@class ServerOwner
+*/
 class ServerOwner
 {
 public:
 	/**
-	*	
-	*	@praram port
-	*	@param clientConnectionType
-	*	@param serverSettings
+	*	This member function starts the server in a way given by arguments.
+	*	@praram port This is the number of a port the server will be listening on.
+	*	@param clientConnectionType This value describes the kind of connections the server will be accepting.
+	*	@see ClientConnectionType
+	*	@param serverSettings This object contains the necessary information read from the json settings file.
+	*	@see ServerSettings
 	*/
 	static void startServer(int port, ClientConnectionType clientConnectionType, const ServerSettings& serverSettings) {
 		server = new Server(port, clientConnectionType, serverSettings);
@@ -26,7 +31,7 @@ public:
 	}
 
 	/**
-	*	
+	*	This member function stops the server and performs memory cleanup.
 	*/
 	static void stopServer() {
 		std::cout << "Controled shutdown" << std::endl;
@@ -43,8 +48,8 @@ private:
 };
 
 /**
-*	@fn
-*	@param sig_num
+*	@fn This function implements the handling of signal passed as arguemnt.
+*	@param sig_num Numerical value describing the signal.
 */
 void sigintHandler(int sig_num);
 

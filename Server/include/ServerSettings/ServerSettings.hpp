@@ -25,21 +25,21 @@ class ServerSettings final
 {
 public:
 	/**
-	*	
+	*	Basic constructor.
 	*/
 	ServerSettings() { 
 		setCurrentTreeToDefault(); 
 	}
 
 	/**
-	*	
+	*	Basic destructor.
 	*/
 	~ServerSettings() {
 		deleteCurrentTree();
 	}
 
 	/**
-	*	
+	*	This member function frees memory allocated for the property tree.
 	*/
 	void deleteCurrentTree() {
 		if (currentTree != nullptr) {
@@ -49,7 +49,7 @@ public:
 	}
 
 	/**
-	*	
+	*	This member function creates new property tree.
 	*/
 	void createCurrentTree() {
 		if (currentTree != nullptr) deleteCurrentTree();
@@ -57,7 +57,7 @@ public:
 	}
 
 	/**
-	*	
+	*	This member function sets the property tree to default values.
 	*/
 	void setCurrentTreeToDefault() {
 		createCurrentTree();
@@ -67,8 +67,8 @@ public:
 	}
 
 	/**
-	*	
-	*	@returns
+	*	This member function checks whether information read from the json file is correct.
+	*	@returns True if file is correct and false if not.
 	*/
 	bool validateJsonFields() {
 		if (currentTree != nullptr) {
@@ -135,8 +135,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param jsonPath
+	*	This member function reads given json settings file and validates it.
+	*	@param jsonPath	A string path to the settings file.
 	*/
 	void readJson(std::string jsonPath) {
 		createCurrentTree();
@@ -145,8 +145,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param jsonPath
+	*	This member function changes the contents of the json settings file if any were made during interactive command line session.
+	*	@param jsonPath A string path to the settings file.
 	*/
 	void writeJson(const std::string& jsonPath) {
 		if (currentTree == nullptr) createCurrentTree();
@@ -154,14 +154,17 @@ public:
 	}
 
 
-	// Debug function
+	/**
+	*	Debug function. Prints current property tree.
+	*/
 	void printCurrentTree() {
 		write_json(std::cout, *currentTree);
 	}
 
 	/**
-	*	
-	*	@returns 
+	*	A getter function.
+	*	@returns A string object containing the sequence to be in the sequence swapping function. Read from the json settings file.
+	*	@see PSiCAlgorithm
 	*/
 	std::string getConnectionData26Numbers() const {
 		if (currentTree != nullptr) {
@@ -171,8 +174,8 @@ public:
 	}
 
 	/**
-	*	
-	*	@returns
+	*	A getter function.
+	*	@returns A string object containing the path to the proxy server's certificate file. Read from the json settings file.
 	*/
 	std::string getCertificateFilePath() const {
 		if (currentTree != nullptr) {
@@ -182,8 +185,8 @@ public:
 	}
 
 	/**
-	*	
-	*	@returns
+	*	A getter function.
+	*	@returns A string object containing the path to the proxy server's private key file. Read from the json settings file.
 	*/
 	std::string getPrivateKeyFilePath() const {
 		if (currentTree != nullptr) {
@@ -193,8 +196,8 @@ public:
 	}
 
 	/**
-	*	
-	*	@returns
+	*	A getter function.
+	*	@returns The maximum number of connections the server can handle at a time. Read from the json settings file.
 	*/
 	unsigned getMaxNumberOfConnections() const {
 		if (currentTree != nullptr) {
@@ -208,8 +211,8 @@ public:
 	}
 
 	/**
-	*	
-	*	@returns
+	*	A getter function.
+	*	@returns The maximum number of seconds a connection through the proxy can be idle. Read from the json settings file.
 	*/
 	unsigned getTimeoutLimit() const {
 		if (currentTree != nullptr) {
@@ -225,8 +228,8 @@ public:
 	// Setters for internal server use in order to modify
 	// json values accordingly.
 	/**
-	*
-	*	@param connectionData26Numbers
+	*	A setter function.
+	*	@param connectionData26Numbers A reference to a string object containing the new sequence to be used.
 	*/
 	void setConnectionData26Numbers(const std::string& connectionData26Numbers) {
 		if (currentTree != nullptr) {
@@ -235,8 +238,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param certificateFilePath
+	*	A setter function.
+	*	@param certificateFilePath A reference to a string object containing the path to the proxy server's certificate file.
 	*/
 	void setCertificateFilePath(const std::string& certificateFilePath) {
 		if (currentTree != nullptr) {
@@ -245,8 +248,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param privateKeyFilePath
+	*	A setter function.
+	*	@param privateKeyFilePath A reference to a string object containing the path to the proxy server's private key file.
 	*/
 	void setPrivateKeyFilePath(const std::string& privateKeyFilePath) {
 		if (currentTree != nullptr) {
@@ -255,8 +258,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param maxNumberOfConnections
+	*	A setter function.
+	*	@param maxNumberOfConnections A reference to a string object containing the desired maximum connections to be used.
 	*/
 	void setMaxNumberOfConnections(const std::string& maxNumberOfConnections) {
 		if (currentTree != nullptr) {
@@ -265,8 +268,8 @@ public:
 	}
 
 	/**
-	*
-	*	@param timeoutLimit
+	*	A setter function.
+	*	@param timeoutLimit A reference to a string object containing the desired maximum idle time of a connection.
 	*/
 	void setTimeoutLimit(const std::string& timeoutLimit) {
 		if (currentTree != nullptr) {
