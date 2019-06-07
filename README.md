@@ -30,6 +30,8 @@ You can use our program with multiple command line options:
 Compilation of this program requires you to have some libraries installed:
 * [Boost].multiprecision
 * [Boost].program_options
+* [Boost].proprety_tree
+* OpenSSL
 
 On top of that a compiler supporting C++17's fold expressions and parameter pack is needed, such as g++ version 8.2. If that is not your default compiler you can specify a flag to cmake to set it manually.
 
