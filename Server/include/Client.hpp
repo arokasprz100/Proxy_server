@@ -41,18 +41,18 @@ public:
 	*	@param clientSocket A file descriptor to the socket the connection from client will happen.
 	*/
 	Client (SSL* ssl, sockaddr_in clientAddr, int clientSocket) : 
+		clientAddr(clientAddr),
 		ssl(ssl), 
 		clientSocket(clientSocket),
 		serverSocket(-1),
-		m_clientAddr(clientAddr),
 		id(nextClientID++),
 		timestamp(std::chrono::high_resolution_clock::now()) {}
 
 	/**
-	*	Member function that clears data collcted from both the client and destination server.
+	*	Member function that clears data collected from both the client and destination server.
 	*/
 	void clearDataFromClient() {
-		m_dataFromClient.clear();
+		dataFromClient.clear();
 		m_httpRequestFromClient.clear();
 	}
 
@@ -61,7 +61,7 @@ public:
 	*	@param dataToAdd Contains the data to be appended.
 	*/
 	void addDataFromClient(const std::vector<char>& dataToAdd) {
-		m_dataFromClient.insert(m_dataFromClient.end(), dataToAdd.begin(), dataToAdd.end());
+		dataFromClient.insert(dataFromClient.end(), dataToAdd.begin(), dataToAdd.end());
 	}
 
 	/**
@@ -69,7 +69,7 @@ public:
 	*	@returns Data collected so far as reference.
 	*/
 	std::vector<char>& getDataFromClient() {
-		return m_dataFromClient;
+		return dataFromClient;
 	}
 
 	/**
@@ -114,6 +114,65 @@ public:
 	const auto& getCurrentTimestamp() const {
 		return timestamp;
 	}
+
+	/**
+	*	Member function that returns client SSL.
+	*	@see ssl
+	*/
+	SSL* getSSL() {
+		return ssl;
+	}
+
+	/**
+	*	Member function that returns client connection socket.
+	*	@see clientSocket
+	*/
+	int getClientSocket() const {
+		return clientSocket;
+	}
+
+	/**
+	*	Member function that returns server connection socket.
+	*	@see serverSocket
+	*/
+	int getServerSocket() const {
+		return serverSocket;
+	}
+
+	/**
+	*	Member function that sets server connection socket.
+	*	@see serverSocket
+	*/
+	void setServerSocket(int serverSocket) {
+		this->serverSocket = serverSocket;
+	}
+
+	/**
+	*	@var m_httpRequestFromClient
+	*	@brief 
+	*/
+	std::vector<char> m_httpRequestFromClient;
+
+	/**
+	*	@var m_httpResponseFromServer
+	*	@brief 
+	*/
+	std::vector<char> m_httpResponseFromServer;
+
+	/**
+	*	@var serverAddr
+	*	@brief Contains the address of the destination server(IPv4:port).
+	*/
+	sockaddr_in serverAddr;
+
+	/**
+	*	@var clientAddr
+	*	@brief Contains the address of the client(IPv4:port).
+	*/
+	sockaddr_in clientAddr;
+
+private:
+
 	/**
 	*	@var ssl
 	*	@brief Contains the pointer to appropriate SSL object from OpenSSL needed to use OpenSSL functions when the connection to proxy is over SSL.
@@ -132,37 +191,6 @@ public:
 	*/
 	int serverSocket;
 
-	/**
-	*	@var m_serverAddr
-	*	@brief Contains the address of the destination server(IPv4:port).
-	*/
-	sockaddr_in m_serverAddr;
-
-	/**
-	*	@var m_clientAddr
-	*	@brief Contains the address of the client(IPv4:port).
-	*/
-	sockaddr_in m_clientAddr;
-
-	/**
-	*	@var m_dataFromClient
-	*	@brief Contains the data collected from client so far.
-	*/
-	std::vector<char> m_dataFromClient; 
-
-	/**
-	*	@var m_httpRequestFromClient
-	*	@brief 
-	*/
-	std::vector<char> m_httpRequestFromClient;
-
-	/**
-	*	@var m_httpResponseFromServer
-	*	@brief 
-	*/
-	std::vector<char> m_httpResponseFromServer;
-
-private:
 	/**
 	*	@var nextClientID
 	*	@brief 
@@ -186,6 +214,12 @@ private:
 	*	@brief 
 	*/
 	ConnectionType connectionType = ConnectionType::UNDEFINED;
+
+	/**
+	*	@var dataFromClient
+	*	@brief Contains the data collected from client so far.
+	*/
+	std::vector<char> dataFromClient; 
 
 };
 

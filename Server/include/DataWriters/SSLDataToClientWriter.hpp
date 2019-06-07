@@ -22,7 +22,7 @@ public:
 	*	@returns 
 	*/
 	static int write(Client& client) {
-		int operationStatus = SSL_write(client.ssl, 
+		int operationStatus = SSL_write(client.getSSL(), 
 			client.m_httpResponseFromServer.data(),
 			client.m_httpResponseFromServer.size());
 

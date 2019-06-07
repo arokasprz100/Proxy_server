@@ -23,7 +23,7 @@ public:
 	*/
 	static void handle(Client& client, int operationStatus, std::vector<pollfd>::iterator clientConnectionPollFD) {
 		if (operationStatus != 0) {
-			int errors = SSL_get_error(client.ssl, operationStatus);
+			int errors = SSL_get_error(client.getSSL(), operationStatus);
 			if (errors == SSL_ERROR_WANT_READ) {
 				clientConnectionPollFD->events |= POLLIN;
 			}

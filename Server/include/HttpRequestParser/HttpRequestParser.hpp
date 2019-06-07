@@ -68,7 +68,7 @@ public:
 		});
 
 		if (contentLengthHeader != headers.end()) {
-			std::istringstream iss (contentLengthHeader->first);
+			std::istringstream iss (contentLengthHeader->second);
 			unsigned contentLength = 0;
 			iss >> contentLength;
 			const char *crlf = "\r\n\r\n";

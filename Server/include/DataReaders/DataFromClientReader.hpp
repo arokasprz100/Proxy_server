@@ -23,7 +23,7 @@ public:
 	*/
 	static int readUnencryptedData(Client& client) {
 		char buffor[1000] = {'\0'};
-		int operationStatus = recv(client.clientSocket, buffor, 999, MSG_NOSIGNAL);
+		int operationStatus = recv(client.getClientSocket(), buffor, 999, MSG_NOSIGNAL);
 		if (operationStatus > 0) {
 			client.refreshTimestamp();
 			client.addDataFromClient(std::vector<char>(buffor, buffor + operationStatus));
@@ -39,7 +39,7 @@ public:
 	*/
 	static int readEncryptedData(Client& client) {
 		char buffor[1000] = {'\0'};
-		int operationStatus = recv(client.clientSocket, buffor, 999, MSG_NOSIGNAL);
+		int operationStatus = recv(client.getClientSocket(), buffor, 999, MSG_NOSIGNAL);
 		if (operationStatus > 0) {
 			client.refreshTimestamp();
 			client.m_httpRequestFromClient = std::vector<char>(buffor, buffor + operationStatus);

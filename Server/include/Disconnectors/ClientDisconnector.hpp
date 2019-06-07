@@ -21,11 +21,11 @@ public:
 	*/
 	static void disconnect(Client& client, std::vector<pollfd>& pollFDs) {
 
-		if (client.ssl) {
-			SSL_free(client.ssl);
+		if (client.getSSL()) {
+			SSL_free(client.getSSL());
 		}
 
-		int clientFd = client.clientSocket;
+		int clientFd = client.getClientSocket();
 
 		for(long unsigned int pollFdIndex = 0; pollFdIndex < pollFDs.size(); ++pollFdIndex)
 		{

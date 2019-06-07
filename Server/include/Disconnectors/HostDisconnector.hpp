@@ -19,7 +19,7 @@ public:
 	*	@param pollFDs
 	*/
 	static void disconnect(Client& client, std::vector<pollfd>& pollFDs) {
-		int serverFd = client.serverSocket;
+		int serverFd = client.getServerSocket();
 
 		for(long unsigned int pollFdIndex = 0; pollFdIndex < pollFDs.size(); ++pollFdIndex)
 		{

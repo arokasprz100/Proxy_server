@@ -22,7 +22,7 @@ public:
 	*/
 	static int write (Client& client) {
 
-		int operationStatus = send(client.clientSocket,
+		int operationStatus = send(client.getClientSocket(),
 			client.m_httpResponseFromServer.data(),
 			client.m_httpResponseFromServer.size(), MSG_NOSIGNAL);
 

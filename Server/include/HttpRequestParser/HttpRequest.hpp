@@ -92,7 +92,6 @@ public:
 		std::string headersEnd = "\r\n";
 		request.insert(request.end(), headersEnd.begin(), headersEnd.end());
 		request.insert(request.end(), m_body.begin(), m_body.end());
-
 		return request;
 	}
 
@@ -113,7 +112,7 @@ public:
 			return header.first == "Content-Length";
 		});
 		if (contentLengthHeader != m_headers.end()) {
-			std::istringstream iss (contentLengthHeader->first);
+			std::istringstream iss (contentLengthHeader->second);
 			unsigned contentLength = 0;
 			iss >> contentLength;
 			if (contentLength == m_body.size()) {

@@ -26,7 +26,7 @@ def client_func():
     else:
         conn = client
 
-    dest = "127.0.0.1:%d" % 7000
+    dest = "---:%d" % 7000
     print ("Klient połączony z serwerem proxy")
     headers = ""
     for i in range(0, 801):

@@ -22,13 +22,13 @@ public:
 		int operationStatus = 0;
 		do {
 			char buffor[1000] = {'\0'};
-			operationStatus = SSL_read(client.ssl, buffor, 999);
+			operationStatus = SSL_read(client.getSSL(), buffor, 999);
 			if (operationStatus > 0) {
 				client.refreshTimestamp();
 				client.addDataFromClient(std::vector<char>(buffor, buffor + operationStatus));
 			}
 
-		} while (SSL_pending(client.ssl));
+		} while (SSL_pending(client.getSSL()));
 
 		return operationStatus;
 	}
@@ -42,13 +42,13 @@ public:
 		int operationStatus = 0;
 		do {
 			char buffor[1000] = {'\0'};
-			operationStatus = SSL_read(client.ssl, buffor, 999);
+			operationStatus = SSL_read(client.getSSL(), buffor, 999);
 			if (operationStatus > 0) {
 				client.refreshTimestamp();
 				client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(), buffor, buffor + operationStatus);
 			}
 
-		} while (SSL_pending(client.ssl));
+		} while (SSL_pending(client.getSSL()));
 
 		return operationStatus;
 	}

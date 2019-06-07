@@ -13,6 +13,7 @@
 
 #include <string>
 #include <tuple>
+#include <iostream>
 
 /**
 *	@class IPAndPortExtractor
@@ -42,6 +43,8 @@ public:
 			return std::make_tuple(toResolve, portNumber);
 		}
 
+		std::cout << "EXTRACT PROBLEM BEGIN" << std::endl;
+
 		addrinfo hints, *res;
 		char addrstr[100] = {'\0'};
 		void *ptr;
@@ -51,9 +54,10 @@ public:
   		hints.ai_socktype = SOCK_STREAM;
   		hints.ai_flags |= AI_CANONNAME;
 
-  		std::string result = "[COULD NOT EXTRACT ADDRESS]";
+  		std::string result = "";
 
   		getaddrinfo (toResolve.c_str(), NULL, &hints, &res);
+
 	    while (res)
 		{
 			inet_ntop (res->ai_family, res->ai_addr->sa_data, addrstr, 100);
@@ -66,6 +70,8 @@ public:
 				case AF_INET6:
 					ptr = &((struct sockaddr_in6 *) res->ai_addr)->sin6_addr;
 					break;
+				default:
+					throw std::runtime_error("502");
 			}
 
 			inet_ntop (res->ai_family, ptr, addrstr, 100);
@@ -76,6 +82,12 @@ public:
 
 			res = res->ai_next;
 		}
+		if (result == "") {
+			throw std::runtime_error("502");
+		}
+
+		std::cout << "EXTRACT PROBLEM END" << std::endl;
+
 		return std::make_tuple(result, portNumber);
 	}
 

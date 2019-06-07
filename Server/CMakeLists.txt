@@ -33,4 +33,4 @@ add_executable(Server.exe
 find_package(OpenSSL REQUIRED)
 FIND_PACKAGE(Boost COMPONENTS program_options REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-target_link_libraries(Server OpenSSL::SSL ${Boost_LIBRARIES})
+target_link_libraries(Server.exe OpenSSL::SSL ${Boost_LIBRARIES})
