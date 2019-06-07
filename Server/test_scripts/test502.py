@@ -4,7 +4,6 @@
 from socket import *
 import threading
 import random
-import string
 import time
 import sys
 import ssl
@@ -14,6 +13,7 @@ PROXY_SSL = False
 
 port_set_event = threading.Event()
 test_path = "/what?ever=42"
+test_header = "Whatever: 42"
 
 def client_func():
     client = socket(AF_INET, SOCK_STREAM)
@@ -26,11 +26,9 @@ def client_func():
     else:
         conn = client
 
-    dest = "127.0.0.1:%d" % 7000
+    dest = "---:%d" % 7000
     print ("Klient połączony z serwerem proxy")
-    headers = ""
-    for i in range(0, 801):
-    	headers += "aaaaa" + ": bbbbbb\r\n"
+    headers = "Host: " + dest + "\r\nConnection: close\r\n" + test_header + "\r\n"
     conn.sendall("GET http://" + dest + test_path + " HTTP/1.1\r\n" + headers + "\r\n")
 
 
@@ -38,7 +36,7 @@ def client_func():
     buf = ""
     last_megabyte = 0
     while True:
-        tmp = conn.recv(1000)
+        tmp = conn.recv(100)
         if not tmp:
             break
         buf += tmp

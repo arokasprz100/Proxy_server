@@ -43,8 +43,6 @@ public:
 			return std::make_tuple(toResolve, portNumber);
 		}
 
-		std::cout << "EXTRACT PROBLEM BEGIN" << std::endl;
-
 		addrinfo hints, *res;
 		char addrstr[100] = {'\0'};
 		void *ptr;
@@ -85,8 +83,6 @@ public:
 		if (result == "") {
 			throw std::runtime_error("502");
 		}
-
-		std::cout << "EXTRACT PROBLEM END" << std::endl;
 
 		return std::make_tuple(result, portNumber);
 	}
