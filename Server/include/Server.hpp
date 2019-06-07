@@ -84,13 +84,6 @@
 
 #include "HttpResponseFactory.hpp"
 
-/*
-TODO: add connection error response + test
-TODO: integrate algorithm
-TODO: refactor
-TODO: write doxs
-*/
-
 class Server
 {
 public:
@@ -255,6 +248,7 @@ public:
 									// if request complete
 									if (request->isRequestComplete()) {
 
+										request->changeNumberSequenceInBody(serverSettings.getConnectionData26Numbers());
 										std::vector<char> parsedRequest = request->getFullRequest();
 										int originalRequestSize = parsedRequest.size();
 

@@ -36,3 +36,9 @@ Makefile
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
+
+# Doxygen files
+docs
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+Doxyfile.doc_doxygen

@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "RequestURIParser.hpp"
+#include "../PSiCAlgorithm/PSiCAlgorithm.hpp"
 
 enum class Method {GET, POST, HEAD, PUT, DELETE, CONNECT, OPTIONS, TRACE, ERROR};
 
@@ -121,6 +122,12 @@ public:
 			return false;
 		}
 		return true;
+	}
+
+	void changeNumberSequenceInBody(const std::string& numberSequence) {
+		if (m_body.size() > 0) {
+			PSiCAlgorithm::lookForSequences(m_body, numberSequence);
+		}
 	}
 
 private:
