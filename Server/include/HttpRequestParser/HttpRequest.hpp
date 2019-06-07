@@ -19,7 +19,9 @@
 */
 enum class Method {GET, POST, HEAD, PUT, DELETE, CONNECT, OPTIONS, TRACE, ERROR};
 
-
+/**
+*	@class HttpRequest
+*/
 class HttpRequest
 {
 public:
