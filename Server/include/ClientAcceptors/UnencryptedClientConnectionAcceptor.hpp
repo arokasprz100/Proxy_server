@@ -1,6 +1,6 @@
 /**
 *	@file UnencryptedClientConnectionAcceptor.hpp
-*	@brief 
+*	@brief This file contains the definition of the plant HTTP connection to proxy acceptor.
 */
 
 #ifndef UnencryptedClientConnectionAcceptor_hpp
@@ -22,9 +22,11 @@ class UnencryptedClientConnectionAcceptor final
 {
 public:
 	/**
-	*	
-	*	@param serverSocket
-	*	@param sslContext
+	*	This function accepts plain HTTP connection from client to the proxy and sets up the socket on which the proxy will be receiving data from client.
+	*	@param serverSocket The server fd on which to accept a connection.
+	*	@param sslContext A pointer to OpenSSL context. This isn't actually used but needs to be an argument to work with std::function the way we are using it.
+	*	@returns A tuple containing new Client object and pollfd.
+	*	@see Client
 	*/
 	static std::tuple<Client, pollfd> acceptConnection(int serverSocket, SSL_CTX* sslContext) {
 		(void)sslContext; // disables warning
