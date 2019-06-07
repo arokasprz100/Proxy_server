@@ -1,6 +1,6 @@
 /**
 *	@file SettingsEditor.hpp
-*	@brief This file contains the interactive command line session handler.
+*	@brief This file contains the interactive command line settings handler.
 */
 
 #ifndef SettingsEditor_hpp

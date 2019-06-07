@@ -31,7 +31,7 @@ public:
 
 	/**
 	*	This function prints to command line passed HTTP request.
-	*	@param request A std:;vector<char> object containing the HTTP request.
+	*	@param request A std::vector<char> object containing the HTTP request.
 	*/
 	static void logHttpRequest(const std::vector<char>& request) {
 		std::cout << "[HTTP REQUEST]" << std::endl;

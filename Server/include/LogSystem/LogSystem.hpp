@@ -17,7 +17,7 @@
 #include <string>
 
 /**
-*	@typedef AllArgsAreStrings An alias for checking whether all parameters in a parameter pack are os type std::string.
+*	@typedef AllArgsAreStrings An alias for checking whether all parameters in a parameter pack are of type std::string.
 */
 template<typename... Types>
 using AllArgsAreStrings = typename std::conjunction<std::is_convertible<Types, std::string>...>::type;
