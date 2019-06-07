@@ -18,7 +18,7 @@ public:
 	HttpRequest(Method method, 
 		const std::vector<char>& resourcePath, 
 		const std::vector<char>& protocol, 
-		const std::map<std::string, std::string>& headers,
+		const std::vector<std::pair<std::string, std::string>>& headers,
 		const std::vector<char>& body
 	) : m_method(method), 
 		m_resourcePath(resourcePath), 
@@ -38,16 +38,19 @@ public:
 		return std::string(m_resourcePath.begin(), m_resourcePath.end());
 	}
 
-	std::map<std::string, std::string> getHeaders() const {
+	std::vector<std::pair<std::string, std::string>> getHeaders() const {
 		return m_headers;
 	}
-
-	/*
+	
 	std::string getProtocolFromResourcePath() const {
-		// size_t protocolNameEnd = m_resourcePath.find("//");
-		
-
-	}*/
+		const char* protocolDelim = "://";
+		auto protocolNameEnd = std::search(m_resourcePath.begin(), m_resourcePath.end(), 
+			protocolDelim, protocolDelim + strlen(protocolDelim));
+		if (protocolNameEnd == m_resourcePath.end()) {
+			return "";
+		}
+		return std::string(m_resourcePath.begin(), protocolNameEnd);
+	}
 
 	int getHeadersSize() const {
 		int size = 0;
@@ -55,6 +58,10 @@ public:
 			size += header.first.size() + header.second.size();
 		}
 		return size;
+	}
+
+	int getNumberOfHeaders() const {
+		return m_headers.size();
 	}
 
 	std::vector<char> getFullRequest() {
@@ -102,8 +109,11 @@ public:
 	}
 
 	bool isRequestComplete() {
-		if (m_headers.find("Content-Length") != m_headers.end()) {
-			std::istringstream iss (m_headers["Content-Length"]);
+		auto contentLengthHeader = std::find_if(m_headers.begin(), m_headers.end(), [](auto& header) {
+			return header.first == "Content-Length";
+		});
+		if (contentLengthHeader != m_headers.end()) {
+			std::istringstream iss (contentLengthHeader->first);
 			unsigned contentLength = 0;
 			iss >> contentLength;
 			if (contentLength == m_body.size()) {
@@ -119,7 +129,7 @@ private:
 	Method m_method;
 	std::vector<char> m_resourcePath;
 	std::vector<char> m_protocol;
-	std::map<std::string, std::string> m_headers;
+	std::vector<std::pair<std::string, std::string>> m_headers;
 	std::vector<char> m_body;
 
 	std::map<Method, std::string> httpMethodStringsMap = {

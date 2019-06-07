@@ -7,7 +7,9 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <string.h>
+#include <utility>
+#include <string>
+#include <cstring>
 
 
 class HttpRequestParser
@@ -57,12 +59,16 @@ public:
 
 		Method httpMethod = findHttpMethod(vectorToString(methodString));
 
-		std::map<std::string, std::string> headers = processHeaders(httpRequestLines);
+		auto headers = processHeaders(httpRequestLines);
 
 		std::vector<char> body;
 
-		if (headers.find("Content-Length") != headers.end()) {
-			std::istringstream iss (headers["Content-Length"]);
+		auto contentLengthHeader = std::find_if(headers.begin(), headers.end(), [](auto& header) {
+			return header.first == "Content-Length";
+		});
+
+		if (contentLengthHeader != headers.end()) {
+			std::istringstream iss (contentLengthHeader->first);
 			unsigned contentLength = 0;
 			iss >> contentLength;
 			const char *crlf = "\r\n\r\n";
@@ -79,21 +85,21 @@ public:
 		return new HttpRequest(httpMethod, pathString, protocolString, headers, body);
 	}
 
-	static std::map<std::string, std::string> processHeaders(std::vector<std::vector<char>> httpRequestLines) {
-		std::map<std::string, std::string> headers;
+	static std::vector<std::pair<std::string, std::string>> processHeaders(std::vector<std::vector<char>> httpRequestLines) {
+		std::vector<std::pair<std::string, std::string>> headers;
 		for (unsigned int i=1; i<httpRequestLines.size(); ++i) {
 
 			std::vector<char> requestLine = httpRequestLines[i];
 
-			if (std::find(requestLine.begin(), requestLine.end(), ':') == requestLine.end()) {
+			auto delim = std::find(requestLine.begin(), requestLine.end(), ':');
+			if (delim == requestLine.end()) {
 				break;
 			}
-
-			auto delim = std::find(requestLine.begin(), requestLine.end(), ':');
+		
 			std::vector<char> header(requestLine.begin(), delim);
 			std::vector<char> value(delim + 2, requestLine.end());
 
-			headers.insert(std::pair<std::string, std::string>(vectorToString(header), vectorToString(value)));
+			headers.push_back(std::make_pair(vectorToString(header), vectorToString(value)));
 
 		}
 		return headers;
@@ -120,10 +126,10 @@ public:
 		};
 
 		auto result = std::find_if(httpMethodStringsMap.begin(),
-															 httpMethodStringsMap.end(),
-															 [httpMethodString](const auto& element) {
-																 return element.second == httpMethodString;
-															 });
+			httpMethodStringsMap.end(),
+			[httpMethodString](const auto& element) {
+				return element.second == httpMethodString;
+			});
 	  if (result != httpMethodStringsMap.end()) return result->first;
 		else { return Method::ERROR; }
 	}

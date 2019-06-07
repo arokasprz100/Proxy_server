@@ -45,7 +45,7 @@
 #include "HttpResponseFactory.hpp"
 
 /*
-TODO: add protocol constraints
+TODO: add connection error response + test
 TODO: integrate algorithm
 TODO: refactor
 TODO: write doxs
@@ -143,6 +143,8 @@ public:
 				if (clientConnectionPollFD->revents & (POLLIN | POLLOUT) && client.getConnectionType() != ConnectionType::ENCRYPTED)
 				{
 
+					try {
+
 					// if full http request present
 					const char *crlf = "\r\n\r\n";
 					std::vector<char>& dataFromClient = client.getDataFromClient();
@@ -154,6 +156,9 @@ public:
 					{
 
 						HttpRequest* request = HttpRequestParser::parseHttpRequest(dataFromClient);
+						if (request->getHttpMethod() == Method::ERROR) {
+							//TODO: implement error handling
+						}
 						std::string resourcePath = request->getResourcePath();
 
 						// if connect method received, make connection to server
@@ -173,9 +178,9 @@ public:
 							std::vector<char> parsedRequest = request->getFullRequest();
 
 							if (request->getHeadersSize() > 8000) {
-								client.m_httpResponseFromServer = HttpResponseFactory::get413Response();
+								throw std::runtime_error("413");
 							} else {
-								client.m_httpResponseFromServer = HttpResponseFactory::get200Response();
+								client.m_httpResponseFromServer = HttpResponseFactory::getResponseByCode("200");
 
 								operationStatus = dataToClientWriter(client);
 								operationStatusHandler(client, operationStatus, clientConnectionPollFD);
@@ -187,43 +192,60 @@ public:
 						else 
 						{
 							RequestURI requestURI = RequestURIParser::parse(resourcePath);
-							if (client.getConnectionType() == ConnectionType::UNDEFINED) 
-							{
-								auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(requestURI.nonLocalPart);
-								auto pollFD = HostConnector::connectToHost(client, ip, port);
-								m_pollfds.push_back(pollFD);
-								client.setConnectionType(ConnectionType::PLAIN_TEXT);
-								clientConnectionPollFD = getPollFD(client.clientSocket);
-								serverConnectionPollFD = getPollFD(client.serverSocket);
+
+							if (request->getProtocolFromResourcePath() != "http") {
+								throw std::runtime_error("501");
 							}
+							else {
 
-							// if request complete
-							if (request->isRequestComplete()) {
-
-								std::vector<char> parsedRequest = request->getFullRequest();
-								int originalRequestSize = parsedRequest.size();
-
-								LogSystem::logMessage("Full " + request->getHttpMethodAsString() +" request received", "RECEIVED", std::to_string(client.getID()));
-
-								if (request->getHeadersSize() > 8000) {
-									client.m_httpResponseFromServer = HttpResponseFactory::get413Response();
-								} 
-								else {
-									request->eraseNonLocalPartOfResourcePath();
-									parsedRequest = request->getFullRequest();
-									client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(),
-										parsedRequest.begin(), parsedRequest.end());
+								if (client.getConnectionType() == ConnectionType::UNDEFINED) 
+								{
+									auto [ip, port] = IPAndPortExtractor::extractIPAddressAndPortNumberFromURI(requestURI.nonLocalPart);
+									auto pollFD = HostConnector::connectToHost(client, ip, port);
+									m_pollfds.push_back(pollFD);
+									client.setConnectionType(ConnectionType::PLAIN_TEXT);
+									clientConnectionPollFD = getPollFD(client.clientSocket);
+									serverConnectionPollFD = getPollFD(client.serverSocket);
 								}
 
-								dataFromClient.erase(dataFromClient.begin(), dataFromClient.begin() + originalRequestSize);
+								// if request complete
+								if (request->isRequestComplete()) {
 
-								serverConnectionPollFD->events = POLLOUT | POLLIN;
-								clientConnectionPollFD->events = POLLOUT | POLLIN;
+									std::vector<char> parsedRequest = request->getFullRequest();
+									int originalRequestSize = parsedRequest.size();
+
+									LogSystem::logMessage("Full " + request->getHttpMethodAsString() +" request received", "RECEIVED", std::to_string(client.getID()));
+
+									if (request->getHeadersSize() > 8000) {
+										throw std::runtime_error("413");
+									} 
+									else {
+										request->eraseNonLocalPartOfResourcePath();
+										parsedRequest = request->getFullRequest();
+										client.m_httpRequestFromClient.insert(client.m_httpRequestFromClient.end(),
+											parsedRequest.begin(), parsedRequest.end());
+									}
+
+									dataFromClient.erase(dataFromClient.begin(), dataFromClient.begin() + originalRequestSize);
+
+									serverConnectionPollFD->events = POLLOUT | POLLIN;
+									clientConnectionPollFD->events = POLLOUT | POLLIN;
+								}
+
 							}
 
 						}
 
 						delete request;
+					}
+
+					} catch(std::runtime_error& e) {
+						std::string message = e.what();
+						client.m_httpResponseFromServer = HttpResponseFactory::getResponseByCode(message);
+						dataToClientWriter(client);
+						client.clearDataFromClient();
+						closeConnection(client, clientIndex);
+						break;
 					}
 				}
 				
@@ -316,6 +338,7 @@ private: // state
 
 	std::vector<pollfd> m_pollfds;
 	std::vector<Client> m_clients;
+
 
 	std::function<int(Client&)> unencryptedDataFromClientReader;
 	std::function<int(Client&)> encryptedDataFromClientReader;
