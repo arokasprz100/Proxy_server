@@ -1,6 +1,6 @@
 /**
 *	@file DataFromClientReader.hpp
-*	@brief 
+*	@brief This file contains definition of DataFromClientReader that contains methods implementing reading unencrypted and encrypted data from client.
 */
 
 #ifndef DataFromClientReader_hpp
@@ -16,10 +16,10 @@ class DataFromClientReader
 {
 public:
 	/**
-	*	
-	*	@param client
+	*	This member function implements reading unecrypted data from client.
+	*	@param client A reference to a Client object from server's std::vector of Client objects.
 	*	@see Client
-	*	@returns 
+	*	@returns Value returned by recv() call.
 	*/
 	static int readUnencryptedData(Client& client) {
 		char buffor[1000] = {'\0'};
@@ -33,9 +33,10 @@ public:
 	}
 
 	/**
-	*	
-	*	@param client
+	*	This member function implements reading ecrypted data from client.
+	*	@param client A reference to a Client object from server's std::vector of Client objects.
 	*	@see Client
+	*	@returns Value returned by recv() call.
 	*/
 	static int readEncryptedData(Client& client) {
 		char buffor[1000] = {'\0'};

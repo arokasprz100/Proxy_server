@@ -1,6 +1,6 @@
 /**
 *	@file DataFromServerReader.hpp
-*	@brief 
+*	@brief This file contains definition of DataFromServerReader implementing reading data received from destination server.
 */
 
 #ifndef DataFromServerReader_hpp
@@ -15,10 +15,10 @@ class DataFromServerReader
 {
 public:
 	/**
-	*	
-	*	@param client
+	*	This member function implements reading data from destination server.
+	*	@param client A reference to a Client object from server's std::vector of Client objects.
 	*	@see Client
-	*	@returns
+	*	@returns Value returned by recv() call.
 	*/
 	static int read(Client& client) {
 		char buffor[1000] = {'\0'};

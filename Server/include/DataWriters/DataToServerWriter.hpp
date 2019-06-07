@@ -1,6 +1,6 @@
 /**
 *	@file DataToServerWriter.hpp
-*	@brief 
+*	@brief This file contains DataToServerWriter class definition that implements writing data to destination server.
 */
 
 #ifndef DataToServerWriter_hpp
@@ -15,10 +15,10 @@ class DataToServerWriter
 {
 public:
 	/**
-	*	
-	*	@param client
+	*	This member function implements writing data to destination server.
+	*	@param client A reference to a Client object from server's std::vector of Client objects.
 	*	@see Client
-	*	@returns 
+	*	@returns Value returned by send() call.
 	*/
 	static int write(Client& client) {
 

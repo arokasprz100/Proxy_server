@@ -1,6 +1,6 @@
 /**
 *	@file SSLDataToClientWriter.hpp
-*	@brief 
+*	@brief This file contains SSLDataToClientWriter class definition that implements writing data to client when the connection is over SSL.
 */
 
 
@@ -16,10 +16,10 @@ class SSLDataToClientWriter
 {
 public:
 	/**
-	*	
-	*	@param client
+	*	This function implements writing data to client when the connection is over SSL.
+	*	@param client A reference to a Client object from server's std::vector of Client objects.
 	*	@see Client
-	*	@returns 
+	*	@returns Value returned by OpenSSL's SSL_write call.
 	*/
 	static int write(Client& client) {
 		int operationStatus = SSL_write(client.getSSL(), 

@@ -1,6 +1,6 @@
 /**
 *	@file DataFromClientReaderChooser.hpp
-*	@brief 
+*	@brief This file contains the definition of DataFromClientReaderChooser that handles assigning handlers for appropriate connection types.
 */
 
 #ifndef DataFromClientReaderChooser_hpp
@@ -19,20 +19,20 @@ class DataFromClientReaderChooser final
 {
 public:
 	/**
-	*	
-	*	@param clientConnectionType
+	*	This member function returns appropriate UnencryptedDataFromClientReader function.
+	*	@param clientConnectionType Describes the type of client to destination server connection.
 	*	@see ClientConnectionType
-	*	@returns 
+	*	@returns Appropriate function to handle unencrypted data reading from client.
 	*/
 	static std::function<int(Client&)> chooseUnencryptedDataFromClientReader(ClientConnectionType clientConnectionType) {
 		return UNENCRYPTED_DATA_FROM_CLIENT_READERS_BY_CONNECTION_TYPE[clientConnectionType];
 	}
 
 	/**
-	*	
-	*	@param clientConnectionType
+	*	This member function returns appropriate EncryptedDataFromClientReader function.
+	*	@param clientConnectionType Describes the type of client to destination server connection.
 	*	@see ClientConnectionType
-	*	@returns 
+	*	@returns Appropriate function to handle encrypted data reading from client.
 	*/
 	static std::function<int(Client&)> chooseEncryptedDataFromClientReader(ClientConnectionType clientConnectionType) {
 		return ENCRYPTED_DATA_FROM_CLIENT_READERS_BY_CONNECTION_TYPE[clientConnectionType];
