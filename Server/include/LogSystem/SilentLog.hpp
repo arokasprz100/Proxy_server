@@ -1,6 +1,6 @@
 /**
 *	@file SilentLog.hpp
-*	@brief This file contains the definition of derivative class ConsoleLog that doesnt print log messages.
+*	@brief This file contains the definition of derivative class SilentLog that doesnt print log messages.
 */
 
 #ifndef SilentLog_hpp
