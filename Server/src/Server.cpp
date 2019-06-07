@@ -44,11 +44,16 @@ Server::Server(int port, ClientConnectionType clientConnectionType, const Server
 }
 
 Server::~Server() {
-	for (long unsigned int clientIndex = 0; clientIndex < m_clients.size(); ++clientIndex) {
-		auto& client = m_clients[clientIndex];
-		closeConnection(client, clientIndex);
+	connectionsToClose.clear();
+	for (auto& client : m_clients) {
+		connectionsToClose.push_back(client.getClientSocket());
 	}
 
+	closeMarkedConnections();
+
+	if (m_ctx) {
+		SSL_CTX_free(m_ctx);
+	}
 	LogSystem::logMessage("Closing server.", "CLOSE");
 }
 

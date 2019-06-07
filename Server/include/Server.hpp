@@ -106,7 +106,7 @@ private: // state
 
 	int m_serverSocket;
 	sockaddr_in m_serverAddr;
-	SSL_CTX* m_ctx;
+	SSL_CTX* m_ctx = nullptr;
 
 	const ServerSettings& serverSettings;
 

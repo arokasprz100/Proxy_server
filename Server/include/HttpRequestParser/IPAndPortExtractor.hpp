@@ -43,9 +43,9 @@ public:
 			return std::make_tuple(toResolve, portNumber);
 		}
 
-		addrinfo hints, *res;
+		addrinfo hints, *res = NULL;
 		char addrstr[100] = {'\0'};
-		void *ptr;
+		void *ptr = NULL;
 
 		memset (&hints, 0, sizeof (hints));
   		hints.ai_family = PF_UNSPEC;
@@ -55,6 +55,8 @@ public:
   		std::string result = "";
 
   		getaddrinfo (toResolve.c_str(), NULL, &hints, &res);
+
+  		addrinfo * first = res;
 
 	    while (res)
 		{
@@ -80,6 +82,9 @@ public:
 
 			res = res->ai_next;
 		}
+
+		freeaddrinfo(first);
+
 		if (result == "") {
 			throw std::runtime_error("502");
 		}
