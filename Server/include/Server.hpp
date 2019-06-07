@@ -28,6 +28,8 @@
 *	Compilation of this program requires you to have some libraries installed
 *	@li [Boost].multiprecision
 *	@li [Boost].program_options
+*	@li [Boost].property_tree
+*	@li OpenSSL library
 *	
 *	On top of that a compiler supporting C++17's fold expressions and parameter pack is needed, such as g++ version 8.2.
 *	If that is not your default compiler you can specify a flag to cmake to set it manually.

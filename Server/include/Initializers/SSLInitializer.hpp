@@ -1,6 +1,6 @@
 /**
 *	@file SSLInitializer.hpp
-*	@brief 
+*	@brief This file contains definitions of functions that initialize important OpenSSL variables and call required OpenSSL functions.
 */
 
 #ifndef SSLInitializer_hpp
@@ -16,10 +16,10 @@ class SSLInitializer final
 {
 public:
 	/**
-	*
-	*	@param certificateFilePath
-	* 	@param privateKeyFilePath
-	*	@returns
+	*	This member function calls required OpenSSL functions and sets up OpenSSL context using which the server will communicate with client if the client to proxy connection is over SSL.
+	*	@param certificateFilePath	A reference to string object containing the path to the server's certificate file.
+	* 	@param privateKeyFilePath A reference to string object containing the path to the server's private key file.
+	*	@returns Pointer to context created by OpenSSL functions.
 	*/
 	static SSL_CTX* initialize(const std::string& certificateFilePath, const std::string& privateKeyFilePath) {
 		initOpenssl();
