@@ -11,7 +11,7 @@ using cpp_int = boost::multiprecision::cpp_int;
 class PSiCAlgorithm
 {
 public:
-	static void lookForSequences(std::vector<char>& input, const srd::strin& desiredSequenceString);
+	static void lookForSequences(std::vector<char>& input, const std::string& desiredSequenceString);
 
 private:
 	static bool checkSequence(std::string input);

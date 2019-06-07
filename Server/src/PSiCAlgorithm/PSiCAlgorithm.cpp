@@ -1,6 +1,7 @@
 #include "../../include/PSiCAlgorithm/PSiCAlgorithm.hpp"
+#include "../../include/LogSystem/LogSystem.hpp"
 
-void PSiCAlgorithm::lookForSequences(std::vector<char>& input, const srd::strin& desiredSequenceString)
+void PSiCAlgorithm::lookForSequences(std::vector<char>& input, const std::string& desiredSequenceString)
 {
 	std::string found = "";
 	int firstIndex = 0;
@@ -18,7 +19,6 @@ void PSiCAlgorithm::lookForSequences(std::vector<char>& input, const srd::strin&
 			if(found.size() == 26 && PSiCAlgorithm::checkSequence(found))
 			{
 				// swap chars to desired sequence
-				// TODO: change to the variable in the settings
 				for(int j = 0, seqIndex = firstIndex; j < 26;)
 				{
 					char& seqChar = input[seqIndex++];
@@ -41,7 +41,7 @@ void PSiCAlgorithm::lookForSequences(std::vector<char>& input, const srd::strin&
 
 bool PSiCAlgorithm::checkSequence(std::string input)
 {
-	std::cout << "PSiCAlgorithm input: " << input << std::endl;
+	LogSystem::logMessage("PSiCAlgorithm input: " + input, "ALGORITHM");
 
 	// step 1
 	std::string last_24_digits_string(input.substr(2, input.size()));
@@ -61,12 +61,15 @@ bool PSiCAlgorithm::checkSequence(std::string input)
 
 	// step 6
 	cpp_int modulo = result % 97;
-	std::cout << "modulo result: " << modulo << std::endl;
 
-	if(modulo == 1)
+	if(modulo == 1) {
+		LogSystem::logMessage("Modulo result: 1", "ALGORITHM");
 		return true;
-	else
+	}
+	else {
+		LogSystem::logMessage("Modulo result not equal to 1", "ALGORITHM");
 		return false;
+	}
 }
 
 std::string& PSiCAlgorithm::removeLeadingZeros(std::string& input)

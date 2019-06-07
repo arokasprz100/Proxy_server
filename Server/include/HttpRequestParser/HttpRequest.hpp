@@ -125,7 +125,9 @@ public:
 	}
 
 	void changeNumberSequenceInBody(const std::string& numberSequence) {
-		PSiCAlgorithm::lookForSequence(m_body, numberSequence);
+		if (m_body.size() > 0) {
+			PSiCAlgorithm::lookForSequences(m_body, numberSequence);
+		}
 	}
 
 private:
