@@ -5,6 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -pedantic-errors")
 set(CMAKE_SHARED_LINKER_FLAGS "-lssl -lcrypto")
 
+option(BUILD_DOC "Build documentation" ON)
+
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+	SET(DOXYGEN_OUTPUT_DIRECTORY ./docs)
+	SET(DOXYGEN_GENERATE_LATEX YES)
+	SET(DOXYGEN_PROJECT_NAME "Proxy Server")
+	SET(DOXYGEN_PROJECT_BRIEF "This program is a proxy server allowing both encrypted and unencrypted connection to the proxy from the client.")
+    doxygen_add_docs(doc_doxygen
+    				./include
+    				VERBATIM)
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
 
 file(GLOB Server_src
     "include/*/*.hpp"
