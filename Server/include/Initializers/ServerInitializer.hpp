@@ -1,6 +1,6 @@
 /**
 *	@file ServerInitializer.hpp
-*	@brief 
+*	@brief This file contians the definition of ServerInitializer class that sets up some key parts of the server.
 */
 
 #ifndef ServerInitializer_hpp
@@ -24,10 +24,11 @@ class ServerInitializer final
 {
 public:
 	/**
-	*	
-	*	@param port
-	*	@param pollFDs
-	*	@returns
+	*	This member function sets up important variables and sockets needed for the server to work.
+	*	@param port Port number on which the server will listen.
+	*	@param pollFDs A reference std::vector of pollfd's in the Server class. This function puts the server's pollfd on the first index.
+	*	@see Server
+	*	@returns A std::tuple of the port on which the server is listening and server's IP address.
 	*/
 	static std::tuple<int, sockaddr_in> initialize(int port, std::vector<pollfd>& pollFDs) 
 	{
