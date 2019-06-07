@@ -1,5 +1,5 @@
 /**
-*	@file HostConnector.hpp
+*	@file HttpResponseFactory.hpp
 *	@brief This file contains the definition of a class that implements discerning of received HTTP requests and returning approriate set of headers given the request's code.
 */
 

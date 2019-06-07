@@ -1,6 +1,6 @@
 /**
 *	@file InputSettings.hpp
-*	@brief
+*	@brief This file contains the definition of InputSettings class which defines what options were provided in command line.
 */
 
 #ifndef InputSettings_hpp

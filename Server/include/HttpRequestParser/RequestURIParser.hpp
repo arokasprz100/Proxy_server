@@ -1,22 +1,29 @@
 /**
 *	@file RequestURIParser.hpp
-*	@brief 
+*	@brief This file contains definitions of RequestURI struct and RequestURIParser class.
 */
 
 #ifndef RequestURIParser_hpp
 #define RequestURIParser_hpp
 
+/**
+*	@struct RequestURI
+*/
 struct RequestURI {
 	std::string localPart;
 	std::string nonLocalPart;
 };
 
+/**
+*	@class RequestURIParser
+*/
 class RequestURIParser
 {
 public:
 	/**
-	*	
-	*	@param requestURI
+	*	This member fuction parses given URI and returns the local and non-local part.
+	*	@param requestURI URI extracted from HTTP request.
+	*	@returns RequestURI struct containing the local and non-local part of the given URI.
 	*/
 	static RequestURI parse(const std::string& requestURI) {
 		std::string nonLocalURIPart = extractNonLocalURIPart(requestURI);

@@ -1,3 +1,8 @@
+/**
+*	@file RequestURIParser.hpp
+*	@brief 
+*/
+
 #ifndef HttpRequest_hpp
 #define HttpRequest_hpp
 
@@ -9,13 +14,18 @@
 #include "RequestURIParser.hpp"
 #include "../PSiCAlgorithm/PSiCAlgorithm.hpp"
 
+/**
+*	@enum Method This enum provides values for each HTTP request type.
+*/
 enum class Method {GET, POST, HEAD, PUT, DELETE, CONNECT, OPTIONS, TRACE, ERROR};
 
 
 class HttpRequest
 {
 public:
-
+	/**
+	*	A constructor. Initializes HttpRequest object for later ease of use.
+	*/
 	HttpRequest(Method method, 
 		const std::vector<char>& resourcePath, 
 		const std::vector<char>& protocol, 
@@ -27,22 +37,42 @@ public:
 		m_headers(headers),
 		m_body(body) {}
 
+	/**
+	*	A getter function.
+	*	@returns The type of HTTP method.
+	*/
 	Method getHttpMethod() const {
 		return m_method;
 	}
 
+	/**
+	*	A getter function.
+	*	@returns HTTP request method as string.
+	*/
 	std::string getHttpMethodAsString() {
 		return httpMethodStringsMap[m_method];
 	}
 
+	/**
+	*	A getter function.
+	*	@returns A string object containing the resource path from the HTTP request.
+	*/
 	std::string getResourcePath() const {
 		return std::string(m_resourcePath.begin(), m_resourcePath.end());
 	}
 
+	/**
+	*	A getter function.
+	*	@returns A vector of header name and value pairs.
+	*/
 	std::vector<std::pair<std::string, std::string>> getHeaders() const {
 		return m_headers;
 	}
 	
+	/**
+	*	A getter function.
+	*	@returns The kind of connection found in HTTP request.
+	*/
 	std::string getProtocolFromResourcePath() const {
 		const char* protocolDelim = "://";
 		auto protocolNameEnd = std::search(m_resourcePath.begin(), m_resourcePath.end(), 
@@ -53,6 +83,10 @@ public:
 		return std::string(m_resourcePath.begin(), protocolNameEnd);
 	}
 
+	/**
+	*	A getter function.
+	*	@returns Size of the accumulated headers in the object.
+	*/
 	int getHeadersSize() const {
 		int size = 0;
 		for (auto& header : m_headers) {
@@ -61,10 +95,18 @@ public:
 		return size;
 	}
 
+	/**
+	*	A getter function.
+	*	@returns Number of headers found in the request.
+	*/
 	int getNumberOfHeaders() const {
 		return m_headers.size();
 	}
 
+	/**
+	*	A getter function.
+	*	@returns The whole request as a vector of chars.
+	*/
 	std::vector<char> getFullRequest() {
 
 		std::vector<char> request;
@@ -96,6 +138,9 @@ public:
 		return request;
 	}
 
+	/**
+	*	This member function remves the local part from the request's resource path.
+	*/
 	void eraseNonLocalPartOfResourcePath() {
 		RequestURI requestURI = RequestURIParser::parse(std::string(m_resourcePath.begin(), m_resourcePath.end()));
 		const char* nonLocal = requestURI.nonLocalPart.c_str();
@@ -108,6 +153,10 @@ public:
 
 	}
 
+	/**
+	*	This member function checks whether the request has been received whole yet or not.
+	*	@returns True if it's ready and false if not.
+	*/
 	bool isRequestComplete() {
 		auto contentLengthHeader = std::find_if(m_headers.begin(), m_headers.end(), [](auto& header) {
 			return header.first == "Content-Length";
@@ -124,6 +173,10 @@ public:
 		return true;
 	}
 
+	/**
+	*	This member function checks if there are number sequences specified in the task.
+	*	@param numberSequence A reference to string object containing the number sequence the ones satisfying the conditions are to be swapped to.
+	*/
 	void changeNumberSequenceInBody(const std::string& numberSequence) {
 		if (m_body.size() > 0) {
 			PSiCAlgorithm::lookForSequences(m_body, numberSequence);
