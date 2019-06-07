@@ -17,9 +17,9 @@ class HttpResponseFactory final
 {
 public:
 	/**
-	*	This function returns the approriate header for a given HTTP code.
+	*	This function returns the appropriate response for a given HTTP code.
 	*	@param code A reference to a string containing the 3 character code.
-	*	@returns Header responding to the code.
+	*	@returns HTTP response appropriate to the code.
 	*/
 	static std::vector<char> getResponseByCode(const std::string& code);
 

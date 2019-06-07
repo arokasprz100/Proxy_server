@@ -193,25 +193,25 @@ private:
 
 	/**
 	*	@var nextClientID
-	*	@brief 
+	*	@brief Static variable containing ID of next client (client counter).
 	*/
 	static int nextClientID;
 
 	/**
 	*	@var id
-	*	@brief 
+	*	@brief Client ID.
 	*/
 	int id;
 
 	/**
 	*	@var timestamp
-	*	@brief 
+	*	@brief Current timestamp - indicates laat data transaction.
 	*/
 	std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
 
 	/**
 	*	@var connectionType
-	*	@brief 
+	*	@brief Contains client connection type.
 	*/
 	ConnectionType connectionType = ConnectionType::UNDEFINED;
 
