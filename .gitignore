@@ -27,7 +27,6 @@
 *.lib
 
 # Executables
-Server
 *.exe
 *.out
 *.app

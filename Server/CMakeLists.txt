@@ -26,7 +26,7 @@ file(GLOB Server_src
     "src/*/*.cpp"
     "src/*.cpp")
 
-add_executable(Server
+add_executable(Server.exe
 	${Server_src}
 )
 
