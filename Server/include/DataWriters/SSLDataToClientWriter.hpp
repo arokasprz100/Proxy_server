@@ -7,12 +7,13 @@
 #ifndef SSLDataToClientWriter_hpp
 #define SSLDataToClientWriter_hpp
 
-#include "../LogSystem/ConsoleLog.hpp"
+#include "../LogSystem/LogSystem.hpp"
+#include "../Client.hpp"
 
 /**
 *	@class SSLDataToClientWriter
 */
-class SSLDataToClientWriter
+class SSLDataToClientWriter final
 {
 public:
 	/**
@@ -21,19 +22,8 @@ public:
 	*	@see Client
 	*	@returns Value returned by OpenSSL's SSL_write call.
 	*/
-	static int write(Client& client) {
-		int operationStatus = SSL_write(client.getSSL(), 
-			client.m_httpResponseFromServer.data(),
-			client.m_httpResponseFromServer.size());
+	static int write(Client& client);
 
-		if (operationStatus > 0) {
-			client.refreshTimestamp();
-			client.m_httpResponseFromServer.erase(client.m_httpResponseFromServer.begin(), 
-				client.m_httpResponseFromServer.begin() + operationStatus);
-		}
-
-		return operationStatus;
-	}
 };
 
 #endif // SSLDataToClientWriter_hpp

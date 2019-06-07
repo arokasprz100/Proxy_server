@@ -24,22 +24,10 @@ public:
 	*	@param tags Variable amount of highlighted values inside brackets '[' and ']'.
 	*	@param message Message attached to the associated tags.
 	*/
-	void logMessage(const std::string& tags, const std::string& message){
+	void logMessage(const std::string& tags, const std::string& message) override {
 		std::cout << tags << " " << message << std::endl;
-
 	}
 
-	/**
-	*	This function prints to command line passed HTTP request.
-	*	@param request A std::vector<char> object containing the HTTP request.
-	*/
-	static void logHttpRequest(const std::vector<char>& request) {
-		std::cout << "[HTTP REQUEST]" << std::endl;
-		for(auto& character : request) {
-			std::cout << character;
-		}
-		std::cout << std::endl;
-	}
 };
 
 #endif // ConsoleLog_hpp

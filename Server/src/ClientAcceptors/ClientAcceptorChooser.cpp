@@ -1,7 +1,7 @@
 #include "../../include/ClientAcceptors/ClientAcceptorChooser.hpp"
 
 #include "../../include/ClientAcceptors/SSLClientConnectionAcceptor.hpp"
-#include "../../include/ClientAcceptors/UnencryptedClientConnectionAcceptor.hpp"
+#include "../../include/ClientAcceptors/TCPClientConnectionAcceptor.hpp"
 
 std::map<ClientConnectionType, Acceptor> 
 	ClientAcceptorChooser::CONNECTION_ACCEPTORS_BY_CONNECTION_TYPES = 
@@ -16,7 +16,7 @@ std::map<ClientConnectionType, Acceptor>
 			ClientConnectionType::UNENCRYPTED, 
 			[](int serverSocket, SSL_CTX* sslContext) 
 			{
-				return UnencryptedClientConnectionAcceptor::acceptConnection(serverSocket, sslContext); 
+				return TCPClientConnectionAcceptor::acceptConnection(serverSocket, sslContext); 
 			}
 		}
 };

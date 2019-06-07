@@ -21,11 +21,8 @@ public:
 	*	@param operationStatus Value returned by either send() or recv() call.
 	*	@param clientConnectionPollFD Appropriate iterator to the position of the pollfd struct in the main server class' std::vector on which poll() function is used. 
 	*/
-	static void handle(Client& client, int operationStatus, std::vector<pollfd>::iterator clientConnectionPollFD) {
-		(void)client;
-		(void)operationStatus;
-		clientConnectionPollFD->events = POLLIN | POLLOUT;
-	}
+	static void handle(Client& client, int operationStatus, std::vector<pollfd>::iterator clientConnectionPollFD);
+	
 };
 
 #endif // TCPOperationStatusHandler_hpp

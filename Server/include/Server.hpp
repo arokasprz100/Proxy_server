@@ -66,7 +66,7 @@
 /**
 *	@class Server
 */
-class Server
+class Server final
 {
 public:
 

@@ -20,7 +20,7 @@ public:
 	*	@param tags Variable amount of highlighted values inside brackets '[' and ']'.
 	*	@param message Message attached to the associated tags.
 	*/
-	void logMessage(const std::string& tags, const std::string& message) {
+	void logMessage(const std::string& tags, const std::string& message) override {
 		message + tags;
 	}
 

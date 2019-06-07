@@ -6,6 +6,10 @@
 #ifndef HostDisconnector_hpp
 #define HostDisconnector_hpp
 
+#include <poll.h>
+#include <vector>
+#include "../Client.hpp"
+
 /**
 *	@class HostDisconnector
 */
@@ -18,20 +22,8 @@ public:
 	*	@see Client
 	*	@param pollFDs A reference to server's std::vector of pollfd's.
 	*/
-	static void disconnect(Client& client, std::vector<pollfd>& pollFDs) {
-		int serverFd = client.getServerSocket();
-
-		for(long unsigned int pollFdIndex = 0; pollFdIndex < pollFDs.size(); ++pollFdIndex)
-		{
-			auto& pollFd = pollFDs[pollFdIndex];
-			if(pollFd.fd == serverFd)
-			{
-				close(pollFd.fd);
-				pollFDs.erase(pollFDs.begin() + pollFdIndex);
-				break;
-			}
-		}
-	}
+	static void disconnect(Client& client, std::vector<pollfd>& pollFDs);
+	
 };
 
 #endif // HostDisconnector_hpp

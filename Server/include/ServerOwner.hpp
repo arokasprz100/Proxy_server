@@ -14,7 +14,7 @@
 /**
 *	@class ServerOwner
 */
-class ServerOwner
+class ServerOwner final
 {
 public:
 	/**
@@ -25,21 +25,12 @@ public:
 	*	@param serverSettings This object contains the necessary information read from the json settings file.
 	*	@see ServerSettings
 	*/
-	static void startServer(int port, ClientConnectionType clientConnectionType, const ServerSettings& serverSettings) {
-		server = new Server(port, clientConnectionType, serverSettings);
-		server->startHandlingClients();
-	}
+	static void startServer(int port, ClientConnectionType clientConnectionType, const ServerSettings& serverSettings);
 
 	/**
 	*	This member function stops the server and performs memory cleanup.
 	*/
-	static void stopServer() {
-		std::cout << "Controled shutdown" << std::endl;
-		if (server) {
-			delete server;
-			server = nullptr;
-		}
-	}
+	static void stopServer();
 
 private:
 
