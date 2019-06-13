@@ -14,6 +14,9 @@ To do this you need cmake version at least 3.9.6 as well as make installed on to
 
 ## Usage
 It's worth noting that the generated Makefile will have an additional target, namely, running:
+```bash
+	make doc_doxygen
+```
 
 will produce this documentation! Be aware that this doesnt check if the current one is up-to-date and will produce it from scratch. Produced documentation is provided in HTML and LaTeX.
 
